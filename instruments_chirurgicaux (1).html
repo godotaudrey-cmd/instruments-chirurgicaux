@@ -1,0 +1,2667 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏥 Classeur Instruments Chirurgicaux — Bac Pro HPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bleu: #1B5E8A;
+    --bleu-clair: #4AAED9;
+    --bleu-pale: #D6E8F5;
+    --vert: #1A6B3A;
+    --vert-clair: #4CAF7D;
+    --orange: #E67E22;
+    --rose: #E91E8C;
+    --violet: #7B2FBE;
+    --jaune: #F4D03F;
+    --rouge: #E74C3C;
+    --bg: #F0F7FF;
+    --white: #FFFFFF;
+    --text: #2C3E50;
+    --shadow: 0 8px 32px rgba(27,94,138,0.15);
+    --radius: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─────────────────────────────── */
+  header {
+    background: linear-gradient(135deg, var(--bleu) 0%, #2E86AB 50%, var(--violet) 100%);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-title {
+    font-family: 'Chewy', cursive;
+    color: white;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .header-title span { color: var(--jaune); }
+
+  nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  nav button {
+    font-family: 'Chewy', cursive;
+    font-size: 1rem;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.5px;
+  }
+
+  nav button.active, nav button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  .btn-catalogue { background: var(--jaune); color: var(--bleu); }
+  .btn-flashcard { background: var(--rose); color: white; }
+  .btn-quiz      { background: var(--vert-clair); color: white; }
+  .btn-memory    { background: var(--orange); color: white; }
+  .btn-speed     { background: #9B59B6; color: white; }
+
+  /* ─── MAIN ────────────────────────────────── */
+  main { padding: 30px 40px; max-width: 1400px; margin: 0 auto; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ─── HERO ─────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #1B5E8A, #2E86AB, #7B2FBE);
+    border-radius: var(--radius);
+    padding: 40px;
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '🔪✂️🩺💉🏥';
+    position: absolute;
+    font-size: 4rem;
+    opacity: 0.07;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  .hero h1 {
+    font-family: 'Chewy', cursive;
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .hero p { font-size: 1.1rem; opacity: 0.9; }
+
+  /* ─── FAMILLE TABS ─────────────────────────── */
+  .famille-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+
+  .fam-btn {
+    font-family: 'Chewy', cursive;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 3px solid transparent;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white;
+    color: var(--text);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .fam-btn::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #ccc;
+    transition: background 0.3s;
+  }
+
+  .fam-btn[data-fam="all"]::before,
+  .fam-btn[data-fcfam="all"]::before  { background: var(--text); }
+  .fam-btn[data-fam="1"]::before,
+  .fam-btn[data-fcfam="1"]::before    { background: #E74C3C; }
+  .fam-btn[data-fam="2"]::before,
+  .fam-btn[data-fcfam="2"]::before    { background: #E91E8C; }
+  .fam-btn[data-fam="3"]::before,
+  .fam-btn[data-fcfam="3"]::before    { background: #1A6B3A; }
+  .fam-btn[data-fam="4"]::before,
+  .fam-btn[data-fcfam="4"]::before    { background: var(--bleu); }
+  .fam-btn[data-fam="5"]::before,
+  .fam-btn[data-fcfam="5"]::before    { background: #9B59B6; }
+  .fam-btn[data-fam="6"]::before,
+  .fam-btn[data-fcfam="6"]::before    { background: var(--orange); }
+
+  .fam-btn:hover, .fam-btn.active {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    color: white;
+  }
+
+  .fam-btn.active::before { background: rgba(255,255,255,0.7); }
+
+  .fam-btn[data-fam="1"].active { background: #E74C3C; border-color: #E74C3C; }
+  .fam-btn[data-fam="2"].active { background: #E91E8C; border-color: #E91E8C; }
+  .fam-btn[data-fam="3"].active { background: #1A6B3A; border-color: #1A6B3A; }
+  .fam-btn[data-fam="4"].active { background: var(--bleu); border-color: var(--bleu); }
+  .fam-btn[data-fam="5"].active { background: #9B59B6; border-color: #9B59B6; }
+  .fam-btn[data-fam="6"].active { background: var(--orange); border-color: var(--orange); }
+  .fam-btn[data-fam="all"].active { background: var(--text); border-color: var(--text); }
+  .fam-btn[data-fcfam="1"].active { background: #E74C3C; border-color: #E74C3C; }
+  .fam-btn[data-fcfam="2"].active { background: #E91E8C; border-color: #E91E8C; }
+  .fam-btn[data-fcfam="3"].active { background: #1A6B3A; border-color: #1A6B3A; }
+  .fam-btn[data-fcfam="4"].active { background: var(--bleu); border-color: var(--bleu); }
+  .fam-btn[data-fcfam="5"].active { background: #9B59B6; border-color: #9B59B6; }
+  .fam-btn[data-fcfam="6"].active { background: var(--orange); border-color: var(--orange); }
+  .fam-btn[data-fcfam="all"].active { background: var(--text); border-color: var(--text); }
+
+  /* ─── INSTRUMENT CARDS ─────────────────────── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(27,94,138,0.25);
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 80px;
+    height: 80px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+
+  .card-fam-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+
+  .card-name {
+    font-family: 'Chewy', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+  }
+
+  .card-body { padding: 16px 20px; }
+
+  .card-fonction {
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--bleu-clair);
+    padding-left: 10px;
+  }
+
+  .card-photo-zone {
+    background: #F0F7FF;
+    border-radius: 12px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    border: 2px dashed #C5D8EC;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .card-photo-zone:hover { background: #E3F0FA; }
+
+  .card-photo-zone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .photo-placeholder {
+    font-size: 2rem;
+    margin-bottom: 6px;
+    opacity: 0.4;
+  }
+
+  .photo-hint {
+    font-size: 0.75rem;
+    color: #999;
+    text-align: center;
+  }
+
+  .add-photo-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: var(--bleu);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(27,94,138,0.3);
+    z-index: 2;
+    transition: background 0.2s;
+  }
+
+  .add-photo-btn:hover { background: #1565C0; }
+
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-weight: 700;
+  }
+
+  .tag-anecdote { background: #FDF3E7; color: #8B4513; }
+  .tag-verif    { background: #E8F5E9; color: var(--vert); }
+
+  .card-expand-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--bleu-clair);
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-top: 1px solid #EEF4FA;
+  }
+
+  .card-expand-btn:hover { color: var(--bleu); }
+
+  .card-details {
+    display: none;
+    padding: 0 20px 16px;
+    border-top: 1px solid #EEF4FA;
+  }
+
+  .card-details.open { display: block; }
+
+  .detail-row {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .detail-label {
+    font-family: 'Chewy', cursive;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .detail-descriptif { background: #EBF5FB; border-left: 4px solid #2E86AB; }
+  .detail-verif      { background: #E8F5E9; border-left: 4px solid var(--vert); }
+  .detail-anecdote   { background: #FDF3E7; border-left: 4px solid var(--orange); }
+
+  /* ─── FAM COLORS ─────────────────────── */
+  .fam-1 { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+  .fam-2 { background: linear-gradient(135deg, #E91E8C, #AD1457); }
+  .fam-3 { background: linear-gradient(135deg, #1A6B3A, #2E7D32); }
+  .fam-4 { background: linear-gradient(135deg, #1B5E8A, #1565C0); }
+  .fam-5 { background: linear-gradient(135deg, #7B2FBE, #6A1B9A); }
+  .fam-6 { background: linear-gradient(135deg, #E67E22, #D35400); }
+
+  /* ─── FLASHCARDS PAGE ─────────────────────── */
+  .flashcard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .flashcard-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .progress-bar-wrap {
+    width: 100%;
+    max-width: 600px;
+    background: #DDE6F0;
+    border-radius: 50px;
+    height: 12px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bleu-clair), var(--vert-clair));
+    border-radius: 50px;
+    transition: width 0.5s;
+  }
+
+  .progress-text {
+    font-family: 'Chewy', cursive;
+    font-size: 1.2rem;
+    color: var(--bleu);
+  }
+
+  .flashcard-scene {
+    width: 100%;
+    max-width: 600px;
+    height: 380px;
+    perspective: 1200px;
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+  }
+
+  .flashcard-scene.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+
+  .flashcard-front {
+    background: linear-gradient(135deg, #1B5E8A, #2E86AB);
+    color: white;
+  }
+
+  .flashcard-front .fc-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .flashcard-front .fc-name {
+    font-family: 'Chewy', cursive;
+    font-size: 2.8rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+  }
+
+  .flashcard-front .fc-famille {
+    background: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .flashcard-front .fc-flip-hint {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+
+  .flashcard-back {
+    background: white;
+    transform: rotateY(180deg);
+    align-items: flex-start;
+    text-align: left;
+    overflow-y: auto;
+  }
+
+  .flashcard-back .fc-back-title {
+    font-family: 'Chewy', cursive;
+    font-size: 1.8rem;
+    color: var(--bleu);
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  .fc-info-row {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .fc-info-label {
+    font-weight: 800;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .fc-fonction  { background: var(--bleu-pale); }
+  .fc-verif     { background: #E8F5E9; }
+  .fc-anecdote  { background: #FDF3E7; }
+
+  .flashcard-nav {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .nav-btn {
+    font-family: 'Chewy', cursive;
+    font-size: 1.1rem;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+  .nav-btn.prev  { background: #EEF4FA; color: var(--bleu); }
+  .nav-btn.next  { background: var(--bleu); color: white; }
+  .nav-btn.shuffle { background: var(--rose); color: white; }
+
+  /* ─── QUIZ PAGE ────────────────────────────── */
+  .quiz-container { max-width: 780px; margin: 0 auto; }
+
+  .quiz-header {
+    background: linear-gradient(135deg, var(--vert), #2E7D32);
+    color: white;
+    border-radius: var(--radius);
+    padding: 24px 30px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+  }
+
+  .quiz-score-badge {
+    font-family: 'Chewy', cursive;
+    font-size: 1.4rem;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 20px;
+    border-radius: 50px;
+  }
+
+  .quiz-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+
+  .quiz-q-num {
+    font-family: 'Chewy', cursive;
+    font-size: 1rem;
+    color: var(--bleu-clair);
+    margin-bottom: 8px;
+  }
+
+  .quiz-question {
+    font-family: 'Chewy', cursive;
+    font-size: 1.6rem;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 24px;
+  }
+
+  .quiz-photo-zone {
+    background: #F0F7FF;
+    border-radius: 14px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border: 2px dashed #C5D8EC;
+    overflow: hidden;
+  }
+
+  .quiz-photo-zone img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .quiz-option {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 14px 18px;
+    border: 3px solid #DEE8F0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    text-align: left;
+    line-height: 1.4;
+  }
+
+  .quiz-option:hover:not(:disabled) {
+    border-color: var(--bleu-clair);
+    background: var(--bleu-pale);
+    transform: scale(1.02);
+  }
+
+  .quiz-option.correct  { background: #E8F5E9; border-color: var(--vert); color: var(--vert); }
+  .quiz-option.wrong    { background: #FFEBEE; border-color: #E74C3C; color: #C0392B; }
+
+  .quiz-feedback {
+    display: none;
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .quiz-feedback.correct { background: #E8F5E9; color: var(--vert); display: block; }
+  .quiz-feedback.wrong   { background: #FFEBEE; color: #C0392B; display: block; }
+
+  .quiz-next-btn {
+    display: none;
+    margin-top: 16px;
+    font-family: 'Chewy', cursive;
+    font-size: 1.2rem;
+    padding: 12px 30px;
+    background: var(--vert);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 14px rgba(26,107,58,0.3);
+  }
+
+  .quiz-next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(26,107,58,0.4); }
+
+  .quiz-type-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .qtype-btn {
+    font-family: 'Chewy', cursive;
+    font-size: 1rem;
+    padding: 8px 18px;
+    border: 3px solid #DEE8F0;
+    border-radius: 50px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.2s;
+  }
+
+  .qtype-btn.active, .qtype-btn:hover {
+    border-color: var(--vert);
+    background: var(--vert);
+    color: white;
+  }
+
+  /* ─── MEMORY GAME ──────────────────────────── */
+  .memory-container { max-width: 900px; margin: 0 auto; }
+
+  .memory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--orange), #D35400);
+    color: white;
+    border-radius: var(--radius);
+    padding: 20px 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .memory-stats {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .memory-stat {
+    text-align: center;
+  }
+
+  .memory-stat-val {
+    font-family: 'Chewy', cursive;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .memory-stat-lbl {
+    font-size: 0.78rem;
+    opacity: 0.8;
+  }
+
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+
+  .memory-card {
+    aspect-ratio: 3/4;
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.4s;
+  }
+
+  .memory-card.flipped { transform: rotateY(180deg); }
+  .memory-card.matched { opacity: 0.6; pointer-events: none; }
+
+  .memory-card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 6px;
+    line-height: 1.3;
+  }
+
+  .memory-card-back-face {
+    background: linear-gradient(135deg, var(--orange), #D35400);
+    color: white;
+    font-family: 'Chewy', cursive;
+    font-size: 1.8rem;
+  }
+
+  .memory-card-front-face {
+    transform: rotateY(180deg);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.72rem;
+  }
+
+  .memory-card.type-name .memory-card-front-face {
+    background: linear-gradient(135deg, var(--bleu-pale), #C3DDF5);
+    color: var(--bleu);
+    font-family: 'Chewy', cursive;
+    font-size: 1rem;
+  }
+
+  .memory-card.type-def .memory-card-front-face {
+    background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+    color: #E65100;
+  }
+
+  .memory-restart-btn {
+    font-family: 'Chewy', cursive;
+    font-size: 1.1rem;
+    padding: 10px 24px;
+    background: rgba(255,255,255,0.25);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .memory-restart-btn:hover { background: rgba(255,255,255,0.4); }
+
+  /* ─── SPEED GAME ─────────────────────────── */
+  .speed-container { max-width: 700px; margin: 0 auto; }
+
+  .speed-header {
+    background: linear-gradient(135deg, #9B59B6, #6A1B9A);
+    color: white;
+    border-radius: var(--radius);
+    padding: 24px 30px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .speed-timer {
+    font-family: 'Chewy', cursive;
+    font-size: 4rem;
+    text-align: center;
+    color: var(--jaune);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(244,208,63,0.5);
+  }
+
+  .speed-timer.danger { color: var(--rouge); animation: pulse 0.5s infinite alternate; }
+
+  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+
+  .speed-question {
+    font-family: 'Chewy', cursive;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .speed-input-wrap {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .speed-input {
+    flex: 1;
+    font-family: 'Chewy', cursive;
+    font-size: 1.4rem;
+    padding: 14px 20px;
+    border: 3px solid #DEE8F0;
+    border-radius: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .speed-input:focus { border-color: #9B59B6; }
+  .speed-input.correct { border-color: var(--vert); background: #E8F5E9; }
+  .speed-input.wrong   { border-color: var(--rouge); background: #FFEBEE; animation: shake 0.3s; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .speed-check-btn {
+    font-family: 'Chewy', cursive;
+    font-size: 1.2rem;
+    padding: 14px 24px;
+    background: #9B59B6;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+  }
+
+  .speed-hints {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .speed-hint-btn {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 6px 14px;
+    border: 2px solid #DEE8F0;
+    border-radius: 50px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.2s;
+  }
+
+  .speed-hint-btn:hover { border-color: #9B59B6; color: #9B59B6; }
+
+  .speed-result-line {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 10px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .speed-result-line.show { display: block; }
+  .speed-result-line.ok   { background: #E8F5E9; color: var(--vert); }
+  .speed-result-line.bad  { background: #FFEBEE; color: var(--rouge); }
+
+  /* ─── RESULTS / SCORE ─────────────────────── */
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .result-screen.show { display: block; }
+
+  .result-emoji { font-size: 5rem; margin-bottom: 16px; }
+
+  .result-title {
+    font-family: 'Chewy', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--bleu);
+  }
+
+  .result-score {
+    font-family: 'Chewy', cursive;
+    font-size: 4rem;
+    color: var(--vert-clair);
+    margin: 12px 0;
+  }
+
+  .result-restart-btn {
+    font-family: 'Chewy', cursive;
+    font-size: 1.3rem;
+    padding: 14px 34px;
+    background: linear-gradient(135deg, var(--bleu), #2E86AB);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 6px 18px rgba(27,94,138,0.3);
+    transition: all 0.3s;
+  }
+
+  .result-restart-btn:hover { transform: translateY(-3px); }
+
+  /* ─── SEARCH ─────────────────────────────── */
+  .search-bar-wrap {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .search-bar {
+    width: 100%;
+    font-family: 'Chewy', cursive;
+    font-size: 1.1rem;
+    padding: 14px 50px 14px 20px;
+    border: 3px solid var(--bleu-pale);
+    border-radius: 50px;
+    outline: none;
+    background: white;
+    box-shadow: 0 4px 14px rgba(27,94,138,0.1);
+    transition: border-color 0.2s;
+  }
+
+  .search-bar:focus { border-color: var(--bleu-clair); }
+
+  .search-icon {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3rem;
+  }
+
+  /* ─── OVERLAY MODAL ────────────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-box {
+    background: white;
+    border-radius: var(--radius);
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: popIn 0.3s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #EEF4FA;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .modal-close:hover { background: #DEE8F0; }
+
+  /* ─── MISC ──────────────────────────────── */
+  .section-title {
+    font-family: 'Chewy', cursive;
+    font-size: 1.8rem;
+    color: var(--bleu);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .badge {
+    background: var(--bleu);
+    color: white;
+    border-radius: 50px;
+    padding: 2px 12px;
+    font-size: 0.85rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+  }
+
+  .hidden { display: none !important; }
+
+  /* confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    top: -20px;
+    animation: confetti-fall 2.5s ease-in forwards;
+    z-index: 9999;
+    border-radius: 2px;
+  }
+
+  @keyframes confetti-fall {
+    0%   { transform: translateY(0) rotateZ(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotateZ(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 700px) {
+    header { padding: 16px 20px; }
+    main   { padding: 20px 16px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .quiz-options { grid-template-columns: 1fr; }
+    .memory-grid { grid-template-columns: repeat(4, 1fr); }
+    .hero h1 { font-size: 2rem; }
+    .famille-tabs { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-title">🏥 Instru<span>Chir</span></div>
+  <nav>
+    <button class="btn-catalogue active" onclick="showPage('catalogue')">📚 Catalogue</button>
+    <button class="btn-flashcard" onclick="showPage('flashcards')">🃏 Flashcards</button>
+    <button class="btn-quiz" onclick="showPage('quiz')">🎯 Quiz</button>
+    <button class="btn-memory" onclick="showPage('memory')">🧩 Memory</button>
+    <button class="btn-speed" onclick="showPage('speed')">⚡ Vitesse</button>
+  </nav>
+</header>
+
+<!-- ── URL EDITOR MODAL ── -->
+<div class="modal-overlay" id="urlModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeUrlModal()">✕</button>
+    <div style="font-family:'Chewy',cursive;font-size:1.5rem;color:var(--bleu);margin-bottom:6px;" id="urlEditorTitle">Instrument</div>
+    <div style="font-size:0.85rem;color:#888;margin-bottom:16px;">Collez l'URL de la photo (ex : Wikipedia, votre hébergeur d'images…)</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <input id="urlInput" type="url" placeholder="https://exemple.com/photo.jpg"
+        style="flex:1;font-family:'Nunito',sans-serif;font-size:0.95rem;padding:10px 14px;border:2px solid #DEE8F0;border-radius:10px;outline:none;"
+        oninput="previewUrl()" onkeydown="if(event.key==='Enter')confirmUrl()">
+      <button onclick="previewUrl()"
+        style="font-family:'Chewy',cursive;font-size:1rem;padding:10px 18px;background:var(--bleu-clair);color:white;border:none;border-radius:10px;cursor:pointer;">
+        👁 Aperçu
+      </button>
+    </div>
+    <div id="urlPreviewWrap" style="display:none;margin-bottom:16px;border-radius:12px;overflow:hidden;max-height:200px;background:#f0f7ff;text-align:center;">
+      <img id="urlPreview" style="max-height:200px;max-width:100%;object-fit:contain;" alt="aperçu">
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeUrlModal()"
+        style="font-family:'Chewy',cursive;font-size:1rem;padding:10px 22px;background:#EEF4FA;color:var(--bleu);border:none;border-radius:50px;cursor:pointer;">
+        Annuler
+      </button>
+      <button onclick="confirmUrl()"
+        style="font-family:'Chewy',cursive;font-size:1rem;padding:10px 26px;background:var(--bleu);color:white;border:none;border-radius:50px;cursor:pointer;box-shadow:0 4px 12px rgba(27,94,138,0.3);">
+        ✅ Valider
+      </button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════════ CATALOGUE ═══════════════ -->
+<div id="page-catalogue" class="page active">
+  <div class="hero">
+    <h1>Classeur des Instruments Chirurgicaux</h1>
+    <p>Bac Pro Hygiène Propreté Stérilisation · Guide complet de reconnaissance</p>
+  </div>
+
+  <div class="search-bar-wrap">
+    <input class="search-bar" id="searchInput" type="text" placeholder="Rechercher un instrument…" oninput="filterCards()">
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <div class="famille-tabs" id="famTabs">
+    <button class="fam-btn active" data-fam="all" onclick="filterFam('all',this)">🔬 Tout voir</button>
+    <button class="fam-btn" data-fam="1" onclick="filterFam('1',this)">Tranchants</button>
+    <button class="fam-btn" data-fam="2" onclick="filterFam('2',this)">Préhension</button>
+    <button class="fam-btn" data-fam="3" onclick="filterFam('3',this)">Écarteurs</button>
+    <button class="fam-btn" data-fam="4" onclick="filterFam('4',this)">Suture</button>
+    <button class="fam-btn" data-fam="5" onclick="filterFam('5',this)">Creux & Célio</button>
+    <button class="fam-btn" data-fam="6" onclick="filterFam('6',this)">Autres</button>
+  </div>
+
+  <div class="section-title">
+    Instruments <span class="badge" id="countBadge">0</span>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- ═══════════════ FLASHCARDS ═══════════════ -->
+<div id="page-flashcards" class="page">
+  <div class="section-title">🃏 Flashcards — Apprendre par la répétition</div>
+  <div class="flashcard-container">
+    <div style="width:100%;max-width:600px;">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="fcProgress" style="width:0%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;">
+        <span class="progress-text" id="fcProgressText">1 / 1</span>
+        <span style="font-size:0.85rem;color:#888;font-style:italic">Cliquez pour retourner</span>
+      </div>
+    </div>
+
+    <div class="flashcard-scene" id="fcScene" onclick="flipCard()">
+      <div class="flashcard-inner" id="fcInner">
+        <div class="flashcard-face flashcard-front" id="fcFront">
+          <div class="fc-label">Identifiez cet instrument</div>
+          <div class="fc-name" id="fcName">—</div>
+          <div class="fc-famille" id="fcFamille">—</div>
+          <div class="fc-flip-hint">👆 Cliquez pour voir la réponse</div>
+        </div>
+        <div class="flashcard-face flashcard-back" id="fcBack">
+          <div class="fc-back-title" id="fcBackName">—</div>
+          <div class="fc-info-row fc-fonction">
+            <div class="fc-info-label">⚡ Fonction</div>
+            <div id="fcFonction">—</div>
+          </div>
+          <div class="fc-info-row fc-verif">
+            <div class="fc-info-label">✅ Vérification recomposition</div>
+            <div id="fcVerif">—</div>
+          </div>
+          <div class="fc-info-row fc-anecdote" id="fcAnecdoteRow">
+            <div class="fc-info-label">💡 Le saviez-vous ?</div>
+            <div id="fcAnecdote">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard-nav">
+      <button class="nav-btn prev" onclick="fcPrev()">◀ Précédent</button>
+      <button class="nav-btn shuffle" onclick="shuffleFC()">🔀 Mélanger</button>
+      <button class="nav-btn next" onclick="fcNext()">Suivant ▶</button>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+      <button class="fam-btn active" data-fcfam="all" onclick="setFCFam('all',this)">Tous</button>
+      <button class="fam-btn" data-fcfam="1" onclick="setFCFam('1',this)">Tranchants</button>
+      <button class="fam-btn" data-fcfam="2" onclick="setFCFam('2',this)">Préhension</button>
+      <button class="fam-btn" data-fcfam="3" onclick="setFCFam('3',this)">Écarteurs</button>
+      <button class="fam-btn" data-fcfam="4" onclick="setFCFam('4',this)">Suture</button>
+      <button class="fam-btn" data-fcfam="5" onclick="setFCFam('5',this)">Creux & Célio</button>
+      <button class="fam-btn" data-fcfam="6" onclick="setFCFam('6',this)">Autres</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ QUIZ ═══════════════ -->
+<div id="page-quiz" class="page">
+  <div class="quiz-container">
+    <div class="section-title">🎯 Quiz — Testez vos connaissances</div>
+
+    <div class="quiz-type-selector">
+      <button class="qtype-btn active" onclick="setQuizType('fonction',this)">⚡ Reconnaître par la fonction</button>
+      <button class="qtype-btn" onclick="setQuizType('nom',this)">🔤 Donner le nom</button>
+      <button class="qtype-btn" onclick="setQuizType('famille',this)">📁 Identifier la famille</button>
+      <button class="qtype-btn" onclick="setQuizType('verif',this)">✅ Vérification</button>
+    </div>
+
+    <div id="quizGame">
+      <div class="quiz-header">
+        <div>
+          <div style="font-size:0.85rem;opacity:0.8">Question</div>
+          <div style="font-family:'Chewy',cursive;font-size:1.8rem;" id="quizQNum">1/10</div>
+        </div>
+        <div class="quiz-score-badge">Score : <span id="quizScore">0</span></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-q-num" id="quizQLabel">Question 1</div>
+        <div class="quiz-question" id="quizQuestion">—</div>
+        <div class="quiz-photo-zone" id="quizPhotoZone">
+          <div style="font-size:2.5rem;opacity:0.3">📷</div>
+          <div style="font-size:0.8rem;color:#aaa">Photo disponible après ajout</div>
+        </div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <button class="quiz-next-btn" id="quizNextBtn" onclick="nextQuizQuestion()">Question suivante →</button>
+      </div>
+    </div>
+
+    <div class="result-screen" id="quizResult">
+      <div class="result-emoji" id="quizResultEmoji">🎉</div>
+      <div class="result-title">Quiz terminé !</div>
+      <div class="result-score" id="quizResultScore">0/10</div>
+      <div id="quizResultMsg" style="font-size:1.1rem;color:#666;margin-bottom:10px;"></div>
+      <button class="result-restart-btn" onclick="startQuiz()">🔄 Rejouer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MEMORY ═══════════════ -->
+<div id="page-memory" class="page">
+  <div class="memory-container">
+    <div class="section-title">🧩 Memory — Associer nom et définition</div>
+
+    <div class="memory-header">
+      <div class="memory-stats">
+        <div class="memory-stat">
+          <div class="memory-stat-val" id="memPairs">0</div>
+          <div class="memory-stat-lbl">Paires</div>
+        </div>
+        <div class="memory-stat">
+          <div class="memory-stat-val" id="memMoves">0</div>
+          <div class="memory-stat-lbl">Coups</div>
+        </div>
+        <div class="memory-stat">
+          <div class="memory-stat-val" id="memTimer">0:00</div>
+          <div class="memory-stat-lbl">Temps</div>
+        </div>
+      </div>
+      <button class="memory-restart-btn" onclick="initMemory()">🔄 Nouvelle partie</button>
+    </div>
+
+    <div class="memory-grid" id="memoryGrid"></div>
+
+    <div class="result-screen" id="memoryResult">
+      <div class="result-emoji">🧩</div>
+      <div class="result-title">Bravo ! Memory terminé !</div>
+      <div class="result-score" id="memoryResultScore">12 paires</div>
+      <div id="memoryResultMsg" style="font-size:1rem;color:#666;margin-bottom:10px;"></div>
+      <button class="result-restart-btn" onclick="initMemory()">🔄 Nouvelle partie</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SPEED ═══════════════ -->
+<div id="page-speed" class="page">
+  <div class="speed-container">
+    <div class="section-title">⚡ Course contre la montre</div>
+
+    <div class="speed-header">
+      <div>
+        <div style="font-family:'Chewy',cursive;font-size:1.4rem;">Vitesse !</div>
+        <div style="font-size:0.85rem;opacity:0.8">Donnez le nom de l'instrument</div>
+      </div>
+      <div>
+        <div class="speed-timer" id="speedTimer">60</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:'Chewy',cursive;font-size:2rem;" id="speedScore">0</div>
+        <div style="font-size:0.8rem;opacity:0.8">points</div>
+      </div>
+    </div>
+
+    <div id="speedGame" class="hidden">
+      <div class="quiz-photo-zone" id="speedPhotoZone" style="margin-bottom:16px;">
+        <div style="font-size:2.5rem;opacity:0.3">📷</div>
+        <div style="font-size:0.8rem;color:#aaa">Ajoutez une photo pour ce jeu</div>
+      </div>
+      <div class="speed-question" id="speedQuestion">—</div>
+      <div class="speed-input-wrap">
+        <input class="speed-input" id="speedInput" type="text" placeholder="Saisissez le nom…" autocomplete="off">
+        <button class="speed-check-btn" onclick="checkSpeed()">✓</button>
+      </div>
+      <div class="speed-hints" id="speedHints"></div>
+      <div class="speed-result-line" id="speedResult"></div>
+    </div>
+
+    <div id="speedStart" style="text-align:center;padding:40px;">
+      <div style="font-size:4rem;margin-bottom:16px;">⚡</div>
+      <div style="font-family:'Chewy',cursive;font-size:1.8rem;color:var(--bleu);margin-bottom:10px;">Prêt pour le défi ?</div>
+      <div style="color:#666;margin-bottom:24px;">60 secondes pour identifier le maximum d'instruments !</div>
+      <button class="result-restart-btn" onclick="startSpeed()">🚀 C'est parti !</button>
+    </div>
+
+    <div class="result-screen" id="speedResult2">
+      <div class="result-emoji">⚡</div>
+      <div class="result-title">Temps écoulé !</div>
+      <div class="result-score" id="speedFinalScore">0 pts</div>
+      <div id="speedResultMsg" style="font-size:1rem;color:#666;margin-bottom:10px;"></div>
+      <button class="result-restart-btn" onclick="startSpeed()">🔄 Rejouer</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA — Tous les instruments
+// ═══════════════════════════════════════════════
+const INSTRUMENTS = [
+  // FAMILLE 1 — TRANCHANTS
+  { id:1, fam:1, sousCat:"Bistouris", nom:"Manche à bistouri",
+    fonction:"Supporte les lames de bistouri chirurgicales pour réaliser des incisions cutanées ou profondes.",
+    descriptif:"Poignée en acier inoxydable sur laquelle vient se clipper une lame amovible et à usage unique. Plusieurs numéros (n°3, n°4, n°7…). Le manche n°3 est le plus courant.",
+    verification:"Vérifier l'absence de corrosion. Système de fixation fonctionnel. Monter/démonter la lame avec un porte-lame (jamais à la main). Absence de débris dans les rainures.",
+    anecdote:"Bistouri vient de la ville de Pistoia (Italie), réputée au Moyen Âge pour la qualité de ses lames. Les lames stériles jetables n'ont été généralisées qu'après la Seconde Guerre mondiale." },
+
+  { id:2, fam:1, sousCat:"Ciseaux", nom:"Ciseaux MAYO",
+    fonction:"Ciseaux robustes pour la section de tissus résistants : fascias, ligaments, sutures, pansements.",
+    descriptif:"Lames larges et épaisses, droites ou courbées, 14 à 17 cm. Anneaux ergonomiques. La version dorée indique un insert en carbure de tungstène.",
+    verification:"Tester le tranchant avec un coton (fibres coupées nettement). Lames ne se croisent pas avant la pointe. Vis de pivot non lâche. Ranger ouverts.",
+    anecdote:"Créés par les frères William et Charles Mayo, fondateurs de la Mayo Clinic (Minnesota) à la fin du XIXe siècle. L'un des instruments les plus produits au monde depuis plus d'un siècle." },
+
+  { id:3, fam:1, sousCat:"Ciseaux", nom:"Ciseaux METZENBAUM",
+    fonction:"Ciseaux fins à dissection pour couper des tissus délicats (péritoine, muqueuses, plans musculaires superficiels).",
+    descriptif:"Lames longues, minces et légèrement courbées. 14 à 20 cm. Manche plus long que les lames pour meilleure précision.",
+    verification:"Vérifier la finesse de la pointe. Glissement des lames sans jeu ni dureté. Tester sur un coton. Ranger ouverts, protéger les pointes.",
+    anecdote:"Mis au point par Myron Metzenbaum, chirurgien de Cleveland (début XXe). Il cherchait un ciseau permettant de disséquer sans traumatiser les tissus. Très utilisés en chirurgie abdominale et gynécologique." },
+
+  { id:4, fam:1, sousCat:"Ciseaux", nom:"Ciseaux IRIS",
+    fonction:"Petits ciseaux de microchirurgie, initialement pour la chirurgie oculaire, pour couper des fils ou tissus très fins.",
+    descriptif:"Lames très courtes (2–3 cm), tranchantes jusqu'à la pointe. Longueur totale 10–11 cm. Droits ou courbés. Extrêmement précis.",
+    verification:"Inspection minutieuse (loupe si possible). Aucune ébréchure tolérée. Fermeture parfaite (pointes se touchent). Protéger les pointes avec un capuchon.",
+    anecdote:"Le nom vient de leur utilisation originelle en ophtalmologie pour les interventions sur l'iris. Aujourd'hui utilisés en chirurgie plastique, neurochirurgie et bien d'autres spécialités." },
+
+  { id:5, fam:1, sousCat:"Ciseaux", nom:"Ciseaux DAUPHIN",
+    fonction:"Lame supérieure effilée (en pointe de dauphin) pour couper les fils de suture au ras du nœud.",
+    descriptif:"Lame inférieure droite, lame supérieure avec fine pointe recourbée. Permet de glisser sous les boucles de suture. ~14 cm.",
+    verification:"Vérifier la pointe effilée (déformation ou cassure la rend inutilisable). Contrôler le tranchant et la mobilité. Protéger la pointe fine.",
+    anecdote:"La forme caractéristique en « bec de dauphin » est souvent attribuée à des innovations françaises du XIXe siècle. Très apprécié pour retirer agrafes et fils sans risquer de couper les tissus." },
+
+  { id:6, fam:1, sousCat:"Ciseaux", nom:"Ciseaux DELESTRE",
+    fonction:"Branches dissymétriques pour couper pansements adhésifs et bandes sans risquer de blesser le patient.",
+    descriptif:"Lame inférieure à extrémité arrondie élargie glissant sous le pansement. Utilisation en soins infirmiers, urgences et stérilisation.",
+    verification:"Absence de jeu dans l'axe. Extrémité arrondie inférieure non déformée (doit glisser sans accrocher). Vérifier le tranchant sur les deux lames.",
+    anecdote:"Nommé d'après un chirurgien ou fabricant français, popularisé dans les hôpitaux français. Représente une avancée ergonomique majeure pour la sécurité auprès des patients fragiles." },
+
+  { id:7, fam:1, sousCat:"Ciseaux", nom:"Ciseaux STEVENS",
+    fonction:"Ciseaux fins à pointe mousse pour sectionner des tissus délicats (conjonctive, peau fine) en ophtalmologie et chirurgie plastique.",
+    descriptif:"Similaires aux Iris mais à pointe mousse. Limite les risques de perforation accidentelle. ~11–12 cm. Lames légèrement courbées.",
+    verification:"Pointes mousses symétriques et non déformées. Fermeture progressive et douce. Protéger impérativement les pointes au conditionnement.",
+    anecdote:"Le Dr Stevens était un ophtalmologiste américain du XIXe siècle. Ses ciseaux ont été pensés pour intervenir au niveau des muscles extra-oculaires sans percer involontairement l'œil." },
+
+  { id:8, fam:1, sousCat:"Ciseaux", nom:"Ciseaux coupe-fil SPENCER",
+    fonction:"Petits ciseaux à ressort dédiés à la coupe des fils de suture.",
+    descriptif:"~10 cm, avec ressort de rappel entre les branches. Lame à crochet inférieure s'insérant sous le fil. Souvent utilisés lors des ablations de fils en soins infirmiers.",
+    verification:"Contrôler l'élasticité du ressort. Fil coupé en un seul geste sans écraser le tissu. Inspecter la lame en crochet pour toute déformation.",
+    anecdote:"Le Dr Spencer a conçu ces ciseaux pour simplifier l'ablation de sutures en consultation. Ils sont devenus incontournables dans toutes les salles de soins infirmiers et de médecine générale." },
+
+  { id:9, fam:1, sousCat:"Ostéotomes", nom:"Ostéotome / Ciseau burin",
+    fonction:"Ciseau chirurgical à frapper pour couper, sculpter ou tailler l'os lors d'interventions orthopédiques ou neurochirurgicales.",
+    descriptif:"Tige en acier à biseau à une ou deux faces, 4 à 25 mm de large. Frappé avec un maillet chirurgical. Différents profils : droit, courbe, en gouge.",
+    verification:"Biseau sans brèche ni ébréchure. Absence de déformation ou torsion de la tige. Extrémité proximale non évasée (champignonnée → projections de métal).",
+    anecdote:"L'ostéotome est l'un des plus anciens instruments chirurgicaux. Des versions en pierre taillée ont servi dans les trépanations préhistoriques. Les modèles en acier trempé datent du XVIIIe siècle." },
+
+  { id:10, fam:1, sousCat:"Pinces coupantes", nom:"Pince coupante / Gouge",
+    fonction:"Instrument de préhension et de coupe pour sectionner des structures dures (os, cartilage, fil métallique) ou prélever des fragments tissulaires.",
+    descriptif:"Pince articulée à mors tranchants ou en cuillère. Mécanisme de levier amplifiant la force. Exemples : pince à os de Luer, rongeur de Kerrison.",
+    verification:"Tranchant des mors net sans jeu. Verrouillage du cran d'arrêt. Articulations non grippées. Toute ébréchure sur un mors tranchant impose la mise hors service.",
+    anecdote:"Les pinces à os coupantes ont révolutionné la chirurgie orthopédique dès le XIXe siècle. Avant, les chirurgiens utilisaient des scies et couteaux pour travailler l'os, bien plus traumatisant." },
+
+  // FAMILLE 2 — PRÉHENSION
+  { id:11, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince HALSTEAD (Mosquito)",
+    fonction:"Clampeur vasculaire de très petite taille pour l'hémostase des petits vaisseaux et la traction sur des tissus délicats.",
+    descriptif:"12 cm, mors fins striés transversalement. Version droite et courbée. Surnommée 'mosquito' en raison de sa petite taille. Bouts atraumatiques.",
+    verification:"Crémaillère s'enclenchant au premier cran. Mors se rejoignant parfaitement sans jeu à la pointe. Absence de déformation des branches.",
+    anecdote:"Inventée par William Stewart Halsted (1852–1922), pionnier de la chirurgie aseptique à l'hôpital Johns Hopkins. Il fut aussi le premier à introduire les gants chirurgicaux en caoutchouc." },
+
+  { id:12, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince KOCHER",
+    fonction:"Pince hémostatique robuste à mors striés longitudinalement terminés par une dent, pour une préhension solide sur les tissus épais.",
+    descriptif:"14–16 cm, avec dent apicale caractéristique. La dent la rend traumatique mais très sûre sur les structures denses.",
+    verification:"Dent apicale non cassée ni émoussée. Mors se fermant avec la dent dans l'encoche sans forcer. Tester le cran de crémaillère. Absence de jeu dans l'axe.",
+    anecdote:"Conçue par Emil Theodor Kocher (1841–1917), Prix Nobel de Médecine 1909 pour ses travaux sur la thyroïde. Très utilisée en chirurgie thyroïdienne, domaine d'excellence de Kocher." },
+
+  { id:13, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince KELLY",
+    fonction:"Pince hémostatique polyvalente à mors partiellement striés, intermédiaire entre le mosquito et le Rochester-Péan.",
+    descriptif:"~14 cm, stries couvrant seulement la moitié distale des mors. Droite ou courbée. Pour clampages vasculaires modérés.",
+    verification:"Stries non comblées par des dépôts ou résidus biologiques. Vérifier crémaillère, fermeture des mors et axe de pivot.",
+    anecdote:"Nommée en hommage au Dr Howard Atwood Kelly (1858–1943), l'un des quatre fondateurs de l'hôpital Johns Hopkins. Considéré comme le père de la gynécologie américaine." },
+
+  { id:14, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince ROCHESTER-PEAN",
+    fonction:"Grande pince hémostatique à mors entièrement striés pour le clampage de vaisseaux de gros calibre ou de pédicules tissulaires épais.",
+    descriptif:"16 à 20 cm avec mors striés sur toute leur longueur. Très résistante. Utilisée en chirurgie viscérale et vasculaire.",
+    verification:"Fermeture complète des mors sur toute leur longueur. Stries sans débris ni corrosion. Tester chaque cran de crémaillère.",
+    anecdote:"Combine le nom de Rochester (siège de la Mayo Clinic) et du chirurgien français Jules-Emile Péan (1830–1898), inventeur de la pince hémostatique moderne en 1862." },
+
+  { id:15, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince LERICHE",
+    fonction:"Pince hémostatique atraumatique à mors longs et fins utilisée principalement en chirurgie vasculaire.",
+    descriptif:"Mors striés finement, légèrement courbés. Préhension douce limitant les lésions vasculaires. 18–20 cm.",
+    verification:"Inspecter les mors pour tout défaut ou ébréchure. Contrôler la douceur de fermeture. Ne pas forcer sur les crans pour éviter la déformation.",
+    anecdote:"René Leriche (1879–1955), grand chirurgien vasculaire lyonnais, décrit le syndrome de Leriche (occlusion aortique). L'un des premiers à opérer sur les artères." },
+
+  { id:16, fam:2, sousCat:"Clamps", nom:"Clamp intestinal DOYEN",
+    fonction:"Clamp traumatique ou atraumatique permettant d'occlure temporairement le tube digestif lors des résections intestinales.",
+    descriptif:"Mors longs et rectilignes, avec ou sans gaines caoutchouc (atraumatiques). Longueur 20–26 cm. Crémaillère permettant un serrage progressif.",
+    verification:"Vérifier l'alignement des mors sur toute leur longueur. Contrôler la crémaillère progressive. Inspecter les gaines caoutchouc pour toute détérioration ou déchirure.",
+    anecdote:"Eugène-Louis Doyen (1859–1916), chirurgien français flamboyant, fut l'un des premiers à filmer ses opérations. Il a laissé son nom à plusieurs instruments encore utilisés aujourd'hui." },
+
+  { id:17, fam:2, sousCat:"Clamps", nom:"Clamp de SATINSKY",
+    fonction:"Clamp vasculaire latéral permettant de saisir partiellement un vaisseau (aorte, veine cave) sans interrompre la circulation.",
+    descriptif:"Mors courbés à 90° avec dents atraumatiques permettant un clampage partiel. Longueur 20–25 cm.",
+    verification:"Vérifier la courbure des mors (déformation altère le clampage partiel). Contrôler les dents atraumatiques. Tester la crémaillère progressive.",
+    anecdote:"Créé par le Dr Clarence Crafoord et perfectionné par Victor Satinsky (chirurgien américain, 1913–1995) pour la chirurgie cardiaque et vasculaire. Permet d'opérer sur un vaisseau battant." },
+
+  // FAMILLE 3 — ÉCARTEURS
+  { id:18, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de BECKMANN",
+    fonction:"Écarteur nasal ou auriculaire à branches réglables permettant d'ouvrir et d'exposer les fosses nasales ou les conduits auditifs.",
+    descriptif:"Deux valves opposées articulées sur un axe central avec système de vis de blocage. Valves de largeurs variables. Acier inoxydable. Longueur ~10–14 cm. Utilisé en ORL, chirurgie nasale et otologie.",
+    verification:"Vérifier le mécanisme de vis de réglage (doit se bloquer sans jeu). Contrôler que les valves s'ouvrent symétriquement. Absence de corrosion sur l'axe. Nettoyage soigneux des interstices.",
+    anecdote:"L'écarteur de Beckmann est un incontournable de la chirurgie ORL. Sa conception à vis de réglage permet d'adapter précisément l'ouverture à chaque patient, ce qui est essentiel dans des cavités aussi étroites que les fosses nasales." },
+
+  { id:19, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de DESMARRES",
+    fonction:"Écarteur ophtalmologique à lame plate recourbée permettant d'écarter et de relever les paupières pour exposer le globe oculaire.",
+    descriptif:"Lame plate en acier recourbée à 90° avec manche plat. Plusieurs tailles (enfant, adulte). Surface lisse atraumatique pour ne pas léser la conjonctive. Longueur totale ~14 cm.",
+    verification:"Vérifier la planéité et la surface lisse de la lame (toute aspérité risque de blesser la conjonctive). Contrôler l'absence de déformation de la courbure. Surface sans corrosion ni rayure.",
+    anecdote:"Louis-Auguste Desmarres (1810–1882), ophtalmologiste parisien de renom, a conçu cet écarteur pour la chirurgie du strabisme et du ptosis. Il fut un pionnier de la chirurgie des paupières en France au XIXe siècle." },
+
+  { id:20, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de FARABEUF",
+    fonction:"Écarteur manuel à double lame en L permettant d'écarter les berges d'une plaie et d'exposer le champ opératoire superficiel ou profond.",
+    descriptif:"Double poignée en S avec deux lames en L à chaque extrémité, de tailles différentes. En acier inoxydable. Peut être utilisé des deux côtés selon la taille souhaitée. Tenu par l'aide opératoire.",
+    verification:"Vérifier l'absence de déformation des lames (une courbure altérée réduit l'efficacité). Inspecter l'absence de fissures sur les bords. Surface lisse sans aspérités pouvant accrocher les tissus.",
+    anecdote:"Louis Hubert Farabeuf (1841–1910), anatomiste et chirurgien parisien, était réputé pour la précision de ses dissections. Cet écarteur, encore très utilisé aujourd'hui, porte son nom depuis le XIXe siècle." },
+
+  { id:21, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de FARABEUF-CORTI",
+    fonction:"Variante de l'écarteur de Farabeuf avec lame plus large et légèrement incurvée, utilisée pour l'exposition des tissus profonds et des organes abdominaux.",
+    descriptif:"Lame large et évasée légèrement incurvée pour s'adapter aux parois abdominales. Manche central ergonomique. Longueur ~20–25 cm. En acier inoxydable.",
+    verification:"Vérifier la rectitude de la lame sur toute sa largeur (toute déformation réduit la protection des organes). Contrôler la rigidité du manche. Absence de corrosion ou d'aspérités.",
+    anecdote:"La conception de cet écarteur associe les noms de Farabeuf et de Corti pour désigner une variante adaptée aux interventions abdominales profondes. Les chirurgiens français du XIXe siècle perfectionnaient constamment leurs instruments pour chaque spécialité." },
+
+  { id:22, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de GILLIES",
+    fonction:"Petit crochet à dent utilisé en chirurgie plastique et maxillo-faciale pour soulever et exposer les lambeaux cutanés et les tissus superficiels.",
+    descriptif:"Petit instrument fin avec une ou deux dents recourbées à l'extrémité. Manche plat et fin. Longueur ~14 cm. Acier inoxydable. Très léger et précis.",
+    verification:"Vérifier la pointe des dents (aucune déformation ou cassure tolérée). Contrôler la rigidité du manche. Absence de résidus dans les dents. Protéger les pointes lors du conditionnement.",
+    anecdote:"Sir Harold Delf Gillies (1882–1960), chirurgien néo-zélandais exerçant en Angleterre, est considéré comme le père de la chirurgie plastique moderne. Il a développé ses techniques lors de la Première Guerre mondiale pour reconstruire les visages des soldats défigurés." },
+
+  { id:23, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de HARTMANN",
+    fonction:"Écarteur auriculaire ou nasal à branches recourbées permettant d'écarter les parois du conduit auditif ou des fosses nasales pour visualiser le tympan ou les cornets.",
+    descriptif:"Deux valves opposées courbées en bec de canard montées sur axe articulé. Système d'ouverture progressive. Différents diamètres de valves. Acier inoxydable. Longueur ~10 cm.",
+    verification:"Vérifier le mécanisme d'ouverture (doit être souple et progressif). Contrôler les valves (pas de déformation ni d'arête vive). Nettoyage minutieux des interstices. Absence de jeu excessif dans l'axe.",
+    anecdote:"Hartmann est un nom porté par plusieurs chirurgiens et médecins français. En ORL, l'écarteur de Hartmann est l'instrument de base pour tout examen du conduit auditif. Sa forme en bec de canard est immédiatement reconnaissable dans toute salle de soins." },
+
+  { id:24, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de LANGENBECK",
+    fonction:"Écarteur manuel à lame unique recourbée pour maintenir les plans musculaires ou les berges d'une plaie lors d'interventions orthopédiques, viscérales ou vasculaires.",
+    descriptif:"Manche plat et long, lame perpendiculaire recourbée à angle droit. Largeurs de lame variables (10 à 35 mm). Disponible en petite, moyenne et grande taille. Acier inoxydable.",
+    verification:"Vérifier la rigidité et l'absence de déformation de la lame. Contrôler la continuité de la surface (pas de fissures ni aspérités). Absence de corrosion. La lame doit être parfaitement lisse.",
+    anecdote:"Bernhard von Langenbeck (1810–1887), chirurgien allemand éminent, fut le fondateur de la Deutsche Gesellschaft für Chirurgie (Société allemande de chirurgie). L'un des écarteurs les plus polyvalents et les plus utilisés dans le monde entier." },
+
+  { id:25, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur SENN MILLER",
+    fonction:"Écarteur double face combinant un crochet à dents d'un côté et une lame plate de l'autre, pour l'exposition des tissus superficiels en chirurgie générale et plastique.",
+    descriptif:"Instrument réversible : une extrémité en lame recourbée plate, l'autre en râteau à 3 dents mousses. Longueur ~16 cm. Acier inoxydable. Très polyvalent pour les petites chirurgies.",
+    verification:"Vérifier les dents (toutes dans le même plan, aucune déformée). Contrôler la lame plate (surface lisse, absence de déformation). Absence de corrosion aux deux extrémités.",
+    anecdote:"Nicholas Senn (1844–1908), chirurgien américain d'origine suisse, fut un pionnier de la chirurgie intestinale et gastrique. Sa contribution à la médecine militaire américaine lors de la guerre hispano-américaine lui valut une grande renommée." },
+
+  { id:26, fam:3, sousCat:"Écarteurs manuels", nom:"Écarteur de VOLKMANN",
+    fonction:"Écarteur à plusieurs dents (rake retractor) permettant d'écarter les tissus mous et les plans musculaires dans des zones étroites, principalement en orthopédie.",
+    descriptif:"Lame en forme de râteau à 2, 4 ou 6 dents mousses ou pointues selon le modèle. Manche plat. Acier inoxydable. Taille variable. Tenu par l'aide opératoire.",
+    verification:"Vérifier que les dents sont toutes dans le même plan (aucune déformée ou manquante). Absence de fissures à la base des dents. Contrôler l'absence de résidus biologiques entre les dents.",
+    anecdote:"Richard von Volkmann (1830–1889), chirurgien prussien pionnier de l'antisepsie en Allemagne, est connu pour la contracture de Volkmann (ischémie des loges musculaires). Ses instruments restent des classiques de la chirurgie orthopédique." },
+
+  { id:27, fam:3, sousCat:"Écarteurs auto-statiques", nom:"Écarteur de GOSSET",
+    fonction:"Écarteur auto-statique abdominal permettant de maintenir ouverte la paroi abdominale sans aide opératoire pendant toute l'intervention.",
+    descriptif:"Structure articulée à crémaillère avec plusieurs valves interchangeables (latérales et supérieures). Exposer la cavité abdominale. Crémaillère progressive permettant d'ajuster l'ouverture selon la morphologie du patient.",
+    verification:"Tester le mécanisme de crémaillère (doit tenir la position sans glisser). Vérifier l'état des valves (pas de déformation ni de fissure). Contrôler les articulations pour l'absence de jeu excessif. Vérifier le système de verrouillage.",
+    anecdote:"L'écarteur de Gosset révolutionna la chirurgie abdominale en permettant au chirurgien de travailler seul ou avec moins d'aides. Fabriqué en France dès le début du XXe siècle, les écarteurs auto-statiques modernes sont ses descendants directs." },
+
+  { id:28, fam:3, sousCat:"Écarteurs auto-statiques", nom:"Écarteur de WEITLANER",
+    fonction:"Écarteur auto-statique à dents pour l'exposition des tissus mous lors des interventions musculaires, orthopédiques, vasculaires ou neurochirurgicales superficielles.",
+    descriptif:"Deux branches articulées à crémaillère avec dents recourbées à chaque extrémité (2×3 ou 2×4 dents). Maintien automatique de l'écartement. Taille variable. Acier inoxydable.",
+    verification:"Vérifier le bon fonctionnement de la crémaillère (maintien de position sans glissement). Contrôler les dents (toutes présentes et non déformées). Déblocage facile sans forçage. Absence de corrosion.",
+    anecdote:"Nommé d'après son inventeur autrichien, cet écarteur est l'un des plus utilisés en chirurgie dans le monde. Indispensable pour les interventions sans aide disponible, il est présent dans pratiquement toutes les boîtes de chirurgie générale." },
+
+  { id:29, fam:3, sousCat:"Écarteurs auto-statiques", nom:"Écarteur ouvre-bouche DOYEN",
+    fonction:"Ouvre-bouche auto-statique permettant de maintenir la cavité buccale ouverte lors d'interventions ORL, maxillo-faciales ou d'intubation difficile.",
+    descriptif:"Deux branches articulées avec appuis dentaires caoutchoutés ou métalliques et crémaillère de blocage. Peut intégrer une dépression linguale. Longueur ~14–18 cm. Acier inoxydable.",
+    verification:"Vérifier les appuis dentaires (revêtement caoutchouc intact, sans fissure). Tester la crémaillère de blocage (doit tenir l'ouverture sans glisser). Contrôler l'absence de jeu dans les articulations.",
+    anecdote:"Eugène-Louis Doyen (1859–1916), chirurgien français pionnier et flamboyant, fut l'un des premiers à filmer ses opérations (1898). Il a laissé son nom à de nombreux instruments chirurgicaux. Son ouvre-bouche reste utilisé dans les blocs opératoires ORL du monde entier." },
+
+  // FAMILLE 4 — SUTURE
+  { id:101, fam:4, sousCat:"Porte-aiguilles", nom:"Porte-aiguille MAYO-HEGAR",
+    fonction:"Instrument permettant de tenir et de guider l'aiguille chirurgicale lors de la réalisation des sutures.",
+    descriptif:"Pince articulée à crémaillère avec mors en carbure de tungstène rainurés. Longueur 14–18 cm. Versions droite, courbée, avec ou sans ciseaux intégrés.",
+    verification:"Vérifier que les mors en carbure ne présentent pas d'ébréchures. Tester la crémaillère (maintient l'aiguille sans qu'elle tourne). Contrôler l'axe de pivot.",
+    anecdote:"Combinaison des noms du Dr Charles Mayo et du Dr Georg Hegar (gynécologue allemand du XIXe). Le porte-aiguille Mayo-Hegar est l'instrument de suture le plus répandu au monde." },
+
+  { id:102, fam:4, sousCat:"Porte-aiguilles", nom:"Porte-aiguille HALSEY",
+    fonction:"Porte-aiguille fin pour les sutures délicates, notamment en chirurgie plastique, ophtalmologie et pédiatrie.",
+    descriptif:"Mors fins et précis, longueur 13–15 cm. Moins robuste que le Mayo-Hegar mais offrant une meilleure précision pour les petites aiguilles.",
+    verification:"Vérifier la finesse des mors et l'absence d'ébréchures. Tester le maintien d'une aiguille fine sans qu'elle tourne. Contrôler la crémaillère.",
+    anecdote:"Nommé en l'honneur du chirurgien William Halsted (fondateur de la chirurgie moderne américaine). La finesse de cet instrument reflète l'importance accordée par Halsted à la précision chirurgicale." },
+
+  { id:103, fam:4, sousCat:"Pinces à dissection", nom:"Pince à dissection ADSON",
+    fonction:"Pince à dissection fine permettant de saisir délicatement les tissus lors des sutures et dissections cutanées.",
+    descriptif:"Petite pince (12–15 cm) sans anneau, à plateau de préhension denté ou lisse. Utilisation cutanée et sous-cutanée. Pression exercée entre pouce et index.",
+    verification:"Vérifier l'alignement des deux mors (se ferment parallèlement). Contrôler la finesse de la pointe. Absence de débris dans les crans de préhension.",
+    anecdote:"Créée par le Dr Alfred Washington Adson (1887–1951), neurochirurgien américain de la Mayo Clinic. Initialement conçue pour la chirurgie crânienne, elle est aujourd'hui universelle en chirurgie." },
+
+  { id:104, fam:4, sousCat:"Pinces à dissection", nom:"Pince à dissection DE BAKEY",
+    fonction:"Pince atraumatique fine utilisée en chirurgie vasculaire et cardiaque pour saisir des tissus fragiles sans les léser.",
+    descriptif:"Mors longs, fins avec stries longitudinales fines. Longueur 18–24 cm. Conçue pour ne pas léser l'endothélium vasculaire.",
+    verification:"Vérifier l'alignement parfait des mors. Contrôler la finesse et la régularité des stries (pas de bavures). Absence de déformation.",
+    anecdote:"Créée par Michael DeBakey (1908–2008), légendaire chirurgien cardiaque américain d'origine libanaise. Pionnier du pontage coronarien et de la chirurgie des anévrysmes de l'aorte." },
+
+  // FAMILLE 5 — CREUX
+  { id:30, fam:5, sousCat:"Canules", nom:"Canule d'aspiration",
+    fonction:"Tube creux relié à un système d'aspiration pour évacuer sang, sérosités et liquides du site opératoire.",
+    descriptif:"Tube en acier ou plastique de différents calibres et longueurs. Extrémité distale à orifice unique ou multiple. Connecteur standard Luer pour tubulure.",
+    verification:"Vérifier la perméabilité de la canule (aucune obstruction). Contrôler l'intégrité de l'extrémité distale (pas de déformation). Tester la connexion Luer.",
+    anecdote:"L'aspiration chirurgicale est devenue indispensable avec la chirurgie abdominale moderne au XIXe siècle. Sans aspiration efficace, les interventions dans les cavités étaient quasi impossibles." },
+
+  { id:31, fam:5, sousCat:"Trocarts", nom:"Trocart",
+    fonction:"Instrument permettant de créer un accès dans une cavité corporelle (abdomen, thorax, articulation) pour l'introduction d'instruments ou d'endoscopes.",
+    descriptif:"Mandrin tranchant (ou à pointe mousse) à l'intérieur d'une chemise (canule). Différents diamètres (5–12 mm). Valve anti-fuite en cœlioscopie.",
+    verification:"Vérifier la valve anti-fuite (étanchéité). Contrôler le mécanisme de sécurité du mandrin (rétraction automatique). Absence de déformation de la chemise.",
+    anecdote:"Le trocart médiéval (du latin tres quarts, « trois-quarts ») servait à ponctionner des cavités pour évacuer des épanchements. Transformé au XXe siècle, il est la porte d'entrée de la cœlioscopie." },
+
+  // FAMILLE 6 — AUTRES
+  { id:32, fam:6, sousCat:"Chirurgie mini-invasive", nom:"Pince célio JOHAN monopolaire",
+    fonction:"Pince de saisie monopolaire pour la dissection et la coagulation des tissus en cœlioscopie.",
+    descriptif:"Pince longue (33 cm) passée dans un trocart 5 mm. Mors en cuillère ou en bouton. Connexion électrique pour coagulation monopolaire.",
+    verification:"Vérifier l'isolation électrique complète. Contrôler les mors (absence de dépôts carbonisés). Tester le mécanisme d'ouverture/fermeture. Vérifier le connecteur électrique.",
+    anecdote:"La cœlioscopie diagnostique a été développée dans les années 1970 et thérapeutique dans les années 1980. La première cholécystectomie cœlioscopique a été réalisée en 1987 par le Dr Mouret à Lyon." },
+
+  { id:33, fam:6, sousCat:"Curettes", nom:"Curette utérine de SIMS",
+    fonction:"Cuillère tranchante ou mousse permettant d'explorer et de prélever des tissus de la cavité utérine (curetage).",
+    descriptif:"Tige métallique terminée par une cuillère fenêtrée à bords tranchants ou mousses. Différentes tailles (n°0 à n°6). Longueur 28–32 cm.",
+    verification:"Vérifier que les bords tranchants ne présentent pas d'ébréchures. Contrôler la rigidité de la tige (absence de courbure acquise). Nettoyer soigneusement la fenêtre.",
+    anecdote:"James Marion Sims (1813–1883), gynécologue américain controversé mais fondateur de la gynécologie moderne. Créateur du spéculum de Sims, il a opéré des femmes esclaves pour mettre au point ses techniques." },
+
+  { id:34, fam:6, sousCat:"Dilatateurs", nom:"Sonde cannelée",
+    fonction:"Guide pour le bistouri lors des incisions de trajets fistuleux, d'abcès, ou d'exploration de plaies étroites.",
+    descriptif:"Tige métallique rainurée (cannelée) sur laquelle glisse le bistouri. Extrémité boutonnée pour éviter les perforations. Longueur 14–20 cm.",
+    verification:"Vérifier la rainure (doit être lisse et régulière). Contrôler le bouton terminal (présent et non déformé). Absence de corrosion dans la rainure.",
+    anecdote:"La sonde cannelée est l'un des instruments chirurgicaux les plus anciens encore en usage. Décrite dans les traités chirurgicaux du XVIIIe siècle, elle reste indispensable pour les incisions guidées." },
+
+  { id:35, fam:6, sousCat:"Microchirurgie", nom:"Pince électrocoagulation bipolaire",
+    fonction:"Pince permettant la coagulation de tissus ou de vaisseaux par courant électrique bipolaire, avec grande précision et sécurité.",
+    descriptif:"Deux branches conductrices isolées sur leur longueur extérieure. Le courant passe uniquement entre les deux mors. Connexion bipolaire spécifique. Différents modèles (droite, angulée).",
+    verification:"Vérifier l'isolation des branches (aucun défaut d'isolation). Contrôler la propreté des mors (dépôts carbonisés = risque d'adhérence). Tester la connexion bipolaire.",
+    anecdote:"La coagulation bipolaire a révolutionné la neurochirurgie dans les années 1960, permettant d'opérer au millimètre près le cerveau. Indispensable pour toute chirurgie microscopique aujourd'hui." },
+
+  // ── PINCES HÉMOSTATIQUES manquantes ──────────────────────────────────────
+  { id:36, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique DUVAL",
+    fonction:"Pince hémostatique ajourée permettant de saisir et de comprimer des tissus fragiles (poumon, intestin) sans les écraser grâce à sa mors fenêtré.",
+    descriptif:"Mors triangulaires fenêtrés (ajourés) permettant une préhension douce et distribuée. Longueur 18–22 cm. Droite ou légèrement courbée. Acier inoxydable.",
+    verification:"Vérifier l'alignement des mors fenêtrés (les fenêtres doivent coïncider). Contrôler la crémaillère (maintien sans glissement). Absence de débris dans les ajourages.",
+    anecdote:"Conçue par Georges Duval, chirurgien français du début du XXe siècle, spécialisé en chirurgie thoracique. La fenestration de ses mors réduit les nécroses tissulaires, une innovation majeure pour la chirurgie pulmonaire." },
+
+  { id:37, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique BENGOLEA",
+    fonction:"Pince hémostatique à mors longs et striés pour le clampage des pédicules vasculaires lors des hystérectomies et interventions pelviennes.",
+    descriptif:"Mors longs et effilés légèrement courbés, stries transversales. Longueur 20–24 cm. Branches plus longues que la plupart des hémostatiques classiques.",
+    verification:"Vérifier la longueur des mors (déformation altère le clampage profond). Tester chaque cran de crémaillère. Stries propres sans résidus biologiques. Articulation sans jeu.",
+    anecdote:"Arturo Bengolea, chirurgien argentin du XXe siècle, a développé cet instrument pour les interventions gynécologiques profondes. Très répandue dans les blocs opératoires de gynécologie en France et en Amérique latine." },
+
+  { id:38, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique CHAPUT",
+    fonction:"Pince hémostatique robuste à mors larges pour la préhension et le clampage de structures digestives épaisses (côlon, estomac).",
+    descriptif:"Mors larges et striés, droits ou légèrement courbés. Longueur 18–22 cm. Solide construction pour résister aux tissus épais.",
+    verification:"Tester la résistance de la crémaillère sous pression. Vérifier la planéité des mors sur toute leur longueur. Absence de jeu dans l'axe de pivot.",
+    anecdote:"Henri Chaput (1857–1919), chirurgien parisien, fut un pionnier de la chirurgie digestive et des anastomoses intestinales. Il a décrit de nombreuses techniques opératoires encore enseignées aujourd'hui." },
+
+  { id:39, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique CHAPUT MAYO",
+    fonction:"Variante de la pince CHAPUT combinant les caractéristiques de la pince de Mayo, pour un clampage solide sur des tissus denses en chirurgie générale.",
+    descriptif:"Mors striés larges avec légère courbure distale. Longueur 20–24 cm. Crémaillère robuste à plusieurs crans. Acier inoxydable de haute qualité.",
+    verification:"Contrôler le serrage progressif de la crémaillère. Vérifier l'alignement des mors et l'absence de déformation. Stries sans résidus ni corrosion.",
+    anecdote:"L'association des noms de Chaput et Mayo dans cet instrument illustre les échanges transatlantiques entre chirurgiens français et américains au début du XXe siècle, période d'intense développement de la chirurgie moderne." },
+
+  { id:40, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique CHRISTOPHE",
+    fonction:"Pince hémostatique fine à pointe effilée pour le clampage de petits vaisseaux et la dissection hémostatique dans des zones étroites.",
+    descriptif:"Mors longs et fins légèrement courbés, stries fines. Longueur 16–18 cm. Conçue pour atteindre des zones profondes avec précision.",
+    verification:"Vérifier la finesse et l'alignement des pointes. Contrôler la fluidité de l'articulation. Tester la crémaillère sur chaque cran. Protéger les pointes fines lors du conditionnement.",
+    anecdote:"Instrument portant le nom d'un chirurgien ou fabricant français, la pince Christophe est particulièrement appréciée en gynécologie et chirurgie pelvienne pour sa capacité à travailler dans des espaces anatomiques restreints." },
+
+  { id:41, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique COLLIN",
+    fonction:"Pince hémostatique polyvalente à mors droits et larges utilisée pour le clampage de pédicules et la préhension de tissus en chirurgie générale et viscérale.",
+    descriptif:"Mors striés droits et larges. Longueur 16–20 cm. Crémaillère standard. Construction robuste en acier inoxydable.",
+    verification:"Tester l'alignement complet des mors sur toute leur longueur. Contrôler chaque position de la crémaillère. Inspecter les stries pour débris ou corrosion.",
+    anecdote:"La pince Collin fait partie des instruments de base des boîtes de chirurgie générale françaises depuis le début du XXe siècle. Son design simple et efficace lui a valu une grande longévité dans les blocs opératoires." },
+
+  { id:42, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique CRILE-ROCHESTER",
+    fonction:"Pince hémostatique robuste à mors longs et striés sur toute leur longueur, pour le clampage de pédicules vasculaires importants.",
+    descriptif:"Mors entièrement striés, droits ou courbés. Longueur 16–20 cm. Conçue par la combinaison de caractéristiques des pinces Crile et Rochester.",
+    verification:"Vérifier la fermeture complète des mors sur toute leur longueur sans jeu à la pointe. Tester la solidité de chaque cran de crémaillère. Absence de corrosion sur les stries.",
+    anecdote:"La pince Crile-Rochester combine l'héritage du Dr George Crile (1864–1943), fondateur de la Cleveland Clinic, et des instruments Rochester. Elle est particulièrement répandue dans les pays anglophones et francophones." },
+
+  { id:43, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique JEAN-LOUIS FAURE",
+    fonction:"Pince hémostatique à mors courbes et effilés pour la préhension et le clampage des pédicules utérins et annexiels en chirurgie gynécologique.",
+    descriptif:"Mors longs et courbés à l'extrémité, stries transversales. Longueur 20–24 cm. Spécialement adaptée aux interventions gynécologiques profondes.",
+    verification:"Vérifier la courbure régulière des mors (toute déformation altère le clampage). Tester la crémaillère. Inspecter les stries. Absence de jeu dans l'articulation.",
+    anecdote:"Jean-Louis Faure (1863–1944), grand chirurgien gynécologue parisien, professeur à la Faculté de médecine de Paris, a développé de nombreux instruments adaptés à la chirurgie des organes génitaux féminins." },
+
+  { id:44, fam:2, sousCat:"Pinces hémostatiques", nom:"Pince hémostatique TERRIER",
+    fonction:"Pince hémostatique à mors longs et striés pour le clampage en chirurgie abdominale générale, notamment en chirurgie intestinale et hépatique.",
+    descriptif:"Mors striés transversalement sur toute leur longueur. Droits ou légèrement courbés. Longueur 18–22 cm. Construction classique robuste.",
+    verification:"Contrôler la fermeture complète sans jeu à la pointe des mors. Tester chaque cran de crémaillère. Stries nettes sans résidus. Absence de déformation.",
+    anecdote:"Félix Terrier (1837–1908), chirurgien parisien de l'Hôtel-Dieu, fut l'un des premiers à utiliser les techniques antiseptiques de Lister en France. Son nom reste associé à plusieurs instruments de chirurgie générale." },
+
+  // ── PINCES À DISSECTION manquantes ───────────────────────────────────────
+  { id:45, fam:4, sousCat:"Pinces à dissection", nom:"Pince à dissection CLOVIS VINCENT",
+    fonction:"Pince à dissection neurochirurgicale fine à pointes droites ou courbées pour la manipulation des structures nerveuses et méningées.",
+    descriptif:"Pince fine sans anneau, plateau de préhension très fin avec stries légères. Longueur 18–20 cm. Conçue pour ne pas traumatiser le tissu nerveux.",
+    verification:"Vérifier l'alignement parfait des deux mors (se ferment en miroir). Contrôler la finesse des stries. Absence de bavures ou d'aspérités sur les pointes.",
+    anecdote:"Clovis Vincent (1879–1947), pionnier de la neurochirurgie française, fut élève de Harvey Cushing aux États-Unis. Il créa le premier service de neurochirurgie en France à l'Hôpital de la Pitié-Salpêtrière à Paris." },
+
+  { id:46, fam:4, sousCat:"Pinces à dissection", nom:"Pince à dissection DE QUENU",
+    fonction:"Pince à dissection à longues branches permettant d'atteindre les structures profondes lors d'interventions abdominales ou pelviennes.",
+    descriptif:"Branches longues sans anneau, plateau denté à l'extrémité. Longueur 22–26 cm. Conception permettant une prise en profondeur.",
+    verification:"Vérifier que les deux mors s'alignent parfaitement malgré la longueur des branches. Contrôler les dents (présentes, non émoussées). Absence de déformation.",
+    anecdote:"Edouard Quenu (1852–1933), chirurgien parisien, est célèbre pour la procédure de Quenu-Miles (amputation abdomino-périnéale du rectum) encore pratiquée aujourd'hui. Ses instruments reflètent son expertise en chirurgie colorectale." },
+
+  { id:47, fam:4, sousCat:"Pinces à dissection", nom:"Pince à dissection FARKAS",
+    fonction:"Pince à dissection fine à plateau denté pour la saisie délicate des tissus cutanés et sous-cutanés en chirurgie plastique et dermatologique.",
+    descriptif:"Pince sans anneau, fine et légère, plateau à 1×2 dents. Longueur 12–14 cm. Acier inoxydable chirurgical. Très précise.",
+    verification:"Contrôler l'alignement des dents (doit s'encliqueter sans forcer). Vérifier la finesse de la pointe. Absence de résidus entre les dents.",
+    anecdote:"Instrument portant le nom d'un chirurgien plasticien, la pince Farkas est particulièrement appréciée pour sa légèreté et sa précision lors de la prise en charge des tissus cutanés fins en chirurgie dermatologique et reconstructrice." },
+
+  { id:48, fam:4, sousCat:"Pinces à dissection", nom:"Pince à dissection GRAEFE fine iris",
+    fonction:"Pince à dissection ophtalmologique ultra-fine pour la manipulation de l'iris et des structures intraoculaires lors d'interventions microchirurgicales.",
+    descriptif:"Pince miniature sans anneau, mors plats très fins. Longueur 10–11 cm. Extrêmement légère. Conçue pour la microchirurgie sous microscope opératoire.",
+    verification:"Inspection sous loupe recommandée. Aucune déformation ou ébréchure tolérée. Fermeture parfaite des deux mors en miroir. Protéger dans un étui rigide.",
+    anecdote:"Albrecht von Graefe (1828–1870), ophtalmologiste prussien considéré comme le fondateur de l'ophtalmologie moderne, a légué son nom à de nombreux instruments. Ses ciseaux et pinces sont encore des standards en chirurgie oculaire." },
+
+  { id:49, fam:4, sousCat:"Pinces à dissection", nom:"Pince à dissection MICHEL",
+    fonction:"Pince spéciale pour la pose et l'ablation des agrafes cutanées de Michel, utilisée pour la fermeture des plaies superficielles.",
+    descriptif:"Pince sans anneau à mors spécialement profilés pour saisir les agrafes Michel et les fermer ou les ouvrir. Longueur ~12 cm. Acier inoxydable.",
+    verification:"Vérifier que les mors sont correctement profilés pour les agrafes Michel (déformation = agrafes mal posées). Contrôler l'absence de résidus métalliques dans les mors.",
+    anecdote:"Les agrafes de Michel sont des agrafes cutanées métalliques inventées au XIXe siècle. Bien que moins répandues depuis l'apparition des agrafeuses automatiques, elles restent utilisées en chirurgie courante et en médecine de campagne." },
+
+  // ── PORTE-AIGUILLE manquant ───────────────────────────────────────────────
+  { id:50, fam:4, sousCat:"Porte-aiguilles", nom:"Porte-aiguille CRILE-WOOD",
+    fonction:"Porte-aiguille robuste à mors en carbure de tungstène permettant la suture de tissus résistants, intermédiaire entre le Mayo-Hegar et le Halsey.",
+    descriptif:"Mors en carbure de tungstène rainurés. Longueur 15–18 cm. Construction solide adaptée aux sutures en profondeur. Crémaillère fiable.",
+    verification:"Vérifier que les mors en carbure ne présentent pas d'ébréchures. Tester la crémaillère (maintient l'aiguille sans qu'elle tourne). Contrôler l'axe de pivot.",
+    anecdote:"Le Dr George Crile (1864–1943), fondateur de la Cleveland Clinic, et le Dr Louis Wood, ont collaboré pour perfectionner cet instrument. Le porte-aiguille Crile-Wood est aujourd'hui un standard dans de nombreux blocs opératoires américains et français." },
+
+  // ── PINCES DE PRÉHENSION (famille 2, sous-cat préhension) ─────────────────
+  { id:51, fam:2, sousCat:"Pinces de préhension", nom:"Pince ALLIS",
+    fonction:"Pince de préhension traumatique à dents permettant de saisir fermement les tissus denses (fascia, muscle, paroi intestinale) pour les mobiliser ou les réséquer.",
+    descriptif:"Mors à plusieurs dents entrelacées permettant une prise ferme et sûre. Longueur 15–20 cm. Crémaillère. Droite ou légèrement courbée.",
+    verification:"Vérifier que les dents s'entrelacent correctement et fermement. Tester la crémaillère. Aucune dent cassée ou manquante tolérée. Absence de jeu dans l'axe.",
+    anecdote:"Oscar Huntington Allis (1836–1921), chirurgien américain de Philadelphie, est surtout connu pour le signe d'Allis (relâchement du fascia lata dans la luxation de hanche). Sa pince est l'une des plus utilisées en chirurgie générale." },
+
+  { id:52, fam:2, sousCat:"Pinces de préhension", nom:"Pince champ BACKHAUS",
+    fonction:"Pince à champs chirurgicaux permettant de fixer les champs stériles sur la peau ou les tissus pour délimiter le champ opératoire.",
+    descriptif:"Petite pince à anneau avec crochet recourbé terminant chaque mors. Longueur 9–11 cm. Crémaillère. Acier inoxydable. Utilisée par paires ou en série.",
+    verification:"Vérifier les crochets (doivent être symétriques et non déformés). Tester la crémaillère (doit tenir fermement le champ). Absence de corrosion sur les crochets.",
+    anecdote:"La pince de Backhaus est l'une des premières à avoir standardisé la fixation des champs opératoires stériles, contribuant à la prévention des infections nosocomiales en salle d'opération depuis la fin du XIXe siècle." },
+
+  { id:53, fam:2, sousCat:"Pinces de préhension", nom:"Pince champ DOYEN",
+    fonction:"Pince à champs chirurgicaux plus grande que la Backhaus, permettant de fixer les champs lourds ou d'assurer une traction sur les berges de plaie abdominale.",
+    descriptif:"Structure similaire à la Backhaus mais de plus grande taille (14–16 cm). Crochets plus robustes pour maintenir des champs lourds.",
+    verification:"Vérifier la robustesse des crochets (ne doivent pas se déformer sous tension). Tester la crémaillère. Absence de corrosion.",
+    anecdote:"Eugène-Louis Doyen, grand innovateur chirurgical français, a développé de nombreuses variantes d'instruments classiques pour les adapter à ses techniques opératoires avancées, notamment en chirurgie abdominale." },
+
+  { id:54, fam:2, sousCat:"Pinces de préhension", nom:"Pince CHERON",
+    fonction:"Pince de préhension à mors ovales et larges fenêtrés permettant de saisir et de comprimer les tissus délicats ou de tenir des compresses.",
+    descriptif:"Mors ovales larges et ajourés (fenêtrés). Longueur 24–28 cm. Crémaillère. Acier inoxydable. Permet une prise ferme sans écraser les tissus.",
+    verification:"Vérifier l'alignement des mors fenêtrés. Contrôler la crémaillère. Absence de débris dans les ajourages. Inspecter les bords des fenêtres (sans aspérités).",
+    anecdote:"La pince Chéron est un classique de la gynécologie française. Elle porte le nom d'un accoucheur ou gynécologue français du XIXe–début XXe siècle. Sa grande taille et ses mors ajourés sont parfaitement adaptés aux interventions obstétricales et gynécologiques." },
+
+  { id:55, fam:2, sousCat:"Pinces de préhension", nom:"Pince en CŒUR",
+    fonction:"Pince de préhension à mors en forme de cœur fenêtré permettant de saisir les organes creux (côlon, estomac) et les tissus mous sans les traumatiser.",
+    descriptif:"Mors en forme de cœur larges et ajourés. Longueur 20–24 cm. Crémaillère. La forme particulière offre une prise distribuée sur une large surface.",
+    verification:"Vérifier la symétrie des deux mors en cœur. Contrôler l'alignement en fermeture. Tester la crémaillère. Absence de débris dans les fenêtres.",
+    anecdote:"La pince en cœur est un instrument typiquement français, dont la forme originale a été pensée pour distribuer la pression sur les organes creux et réduire les risques de perforation lors des interventions sur le tube digestif." },
+
+  { id:56, fam:2, sousCat:"Pinces de préhension", nom:"Pince LONGUETTE",
+    fonction:"Longue pince à plateau pour la préhension et la tenue de compresses, mèches ou drains dans des cavités profondes.",
+    descriptif:"Pince sans anneau, longue tige (30–35 cm), mors plats légèrement striés ou avec petites dents. Permet d'atteindre le fond des cavités abdominales.",
+    verification:"Vérifier la rigidité de la tige (absence de flexion). Contrôler les mors (doivent se fermer parallèlement). Absence de résidus dans les stries.",
+    anecdote:"La pince longuette (de l'adjectif français 'long') est indispensable en chirurgie abdominale pour placer les mèches hémostatiques ou les compresses dans les cavités profondes sans contaminer le champ opératoire." },
+
+  { id:57, fam:2, sousCat:"Pinces de préhension", nom:"Pince OMBREDANNE",
+    fonction:"Pince de préhension à mors courbes pour la saisie des organes profonds lors d'interventions pelviennes et gynécologiques.",
+    descriptif:"Mors courbés à extrémité arrondie. Longueur 20–24 cm. Permet une prise douce dans les angles profonds du pelvis. Crémaillère.",
+    verification:"Vérifier la courbure symétrique des mors. Tester la crémaillère. Contrôler l'absence de déformation ou d'aspérités sur les bords.",
+    anecdote:"Louis Ombrédanne (1871–1956), chirurgien pédiatrique et urologue français, est connu pour ses contributions à la chirurgie de l'hypospadias et ses techniques anesthésiques. Ses instruments reflètent son souci de douceur opératoire." },
+
+  { id:58, fam:2, sousCat:"Pinces de préhension", nom:"Pince pansements GREGOIRE",
+    fonction:"Pince longue à plateau pour la pose, la tenue et le retrait de compresses et de pansements lors des soins infirmiers et des pansements chirurgicaux.",
+    descriptif:"Pince sans anneau à mors plats, striés ou avec petites aspérités. Longueur 20–25 cm. Utilisée lors des pansements pour éviter le contact direct des mains avec la plaie.",
+    verification:"Vérifier l'alignement des mors. Contrôler les stries (propres, sans résidus). Tester la fermeture (doit maintenir la compresse sans glissement).",
+    anecdote:"Instrument portant le nom d'un chirurgien ou infirmier français, la pince Grégoire est un standard des soins infirmiers dans les hôpitaux français. Elle symbolise l'importance de l'asepsie dans les soins post-opératoires." },
+
+  { id:59, fam:2, sousCat:"Pinces de préhension", nom:"Pince pansements PAN MURPHY",
+    fonction:"Pince à pansements à mors ronds et larges permettant de tenir fermement les compresses lors des soins sans contaminer les plaies.",
+    descriptif:"Mors ronds et striés ou avec surface granuleuse. Longueur 18–22 cm. Mors offrant une bonne prise sur les compresses humides. Acier inoxydable.",
+    verification:"Vérifier l'état des surfaces de préhension (stries ou granulation efficaces). Contrôler l'alignement. Tester la prise sur une compresse (ne doit pas glisser).",
+    anecdote:"La pince Pan Murphy associe les noms de fabricants ou chirurgiens ayant perfectionné la prise des compresses mouillées. Elle est devenue incontournable dans les services de soins intensifs et en chirurgie où les pansements doivent être changés fréquemment." },
+
+  { id:60, fam:2, sousCat:"Pinces utérines", nom:"Pince utérine MUSEUX",
+    fonction:"Pince utérine traumatique à dents longues permettant de saisir et de mobiliser le col utérin lors des interventions gynécologiques.",
+    descriptif:"Deux longues dents recourbées à chaque mors (2×2 dents). Longueur 24–28 cm. Crémaillère. Acier inoxydable. Traumatique par nature.",
+    verification:"Vérifier les dents (symétriques, non cassées, non émoussées). Tester la crémaillère. Contrôler l'axe de pivot. Les dents doivent s'entrecroiser parfaitement.",
+    anecdote:"Jean Museux (1818–1877), chirurgien français, a développé cet instrument pour la chirurgie obstétricale. La pince Museux reste un classique de la gynécologie chirurgicale, notamment pour les hystérectomies et les curetages sous contrôle visuel." },
+
+  { id:61, fam:2, sousCat:"Pinces utérines", nom:"Pince utérine POZZI",
+    fonction:"Pince utérine à une dent permettant de saisir le col utérin et d'exercer une traction pour exposer la cavité utérine lors des gestes endocervicaux.",
+    descriptif:"Mors à une seule dent longue et recourbée (1×1 dent). Longueur 24–26 cm. Moins traumatique que la pince Museux. Crémaillère.",
+    verification:"Vérifier la dent unique (droite, non tordue, non émoussée). Tester la crémaillère. Contrôler l'axe de pivot et l'absence de jeu.",
+    anecdote:"Samuel Jean de Pozzi (1846–1918), gynécologue et chirurgien français surnommé 'le Docteur Dieu', était l'un des médecins les plus célèbres de la Belle Époque. Son portrait a été peint par John Singer Sargent. Sa pince reste un classique de la gynécologie." },
+
+  // ── VALVES ET SPÉCULUMS (nouvelle famille 7) ──────────────────────────────
+  { id:62, fam:3, sousCat:"Spéculums", nom:"Spéculum de COLLIN",
+    fonction:"Spéculum bivalve permettant d'écarter les parois vaginales pour exposer le col utérin lors des examens gynécologiques et des gestes endocervicaux.",
+    descriptif:"Deux valves articulées sur une vis de réglage, permettant d'ajuster l'ouverture progressivement. Différentes tailles (S, M, L). Acier inoxydable ou usage unique.",
+    verification:"Vérifier la vis de réglage (doit se bloquer sans jeu). Contrôler les bords des valves (lisses, sans aspérités). Tester l'ouverture et la fermeture progressives.",
+    anecdote:"Joseph Mathieu Collin, fabricant d'instruments chirurgicaux parisien au XIXe siècle, a fourni des instruments à de nombreux chirurgiens français. Le spéculum de Collin est encore la référence pour les consultations gynécologiques en France." },
+
+  { id:63, fam:3, sousCat:"Spéculums", nom:"Spéculum vaginal de CUSCO",
+    fonction:"Spéculum bivalve autoportant à ouverture par vis permettant au praticien d'examiner le col utérin sans aide, les deux mains libres.",
+    descriptif:"Deux valves articulées avec vis de réglage permettant le blocage en position ouverte. Plus court et plus large que le Collin. Permettant une vision directe du col.",
+    verification:"Vérifier la vis de blocage (maintient l'ouverture sans glisser). Contrôler l'état des valves. Tester l'ouverture progressive et le blocage.",
+    anecdote:"Eduard Caspar Jakob Cusco (1819–1891), gynécologue français d'origine austro-hongroise, a perfectionné ce spéculum auto-statique. Aujourd'hui très largement utilisé pour les frottis cervico-utérins et les colposcopies." },
+
+  { id:64, fam:3, sousCat:"Valves", nom:"Valve sus-pubienne de ROCHARD",
+    fonction:"Valve abdominale large permettant d'écarter et de protéger la paroi abdominale sus-pubienne lors des interventions pelviennes.",
+    descriptif:"Grande lame large légèrement courbée avec manche. Longueur totale ~30 cm, lame ~8–10 cm de large. Permet de maintenir la paroi sans aide.",
+    verification:"Vérifier la rectitude et la largeur de la lame (toute déformation réduit la protection). Contrôler la rigidité du manche. Surface lisse sans aspérités.",
+    anecdote:"Instrument portant le nom d'un chirurgien français, la valve de Rochard est indispensable lors des hystérectomies et des césariennes pour maintenir la paroi abdominale sans aide opératoire, libérant ainsi les mains du chirurgien." },
+
+  { id:65, fam:3, sousCat:"Valves", nom:"Valve vaginale DOYEN",
+    fonction:"Valve vaginale large et plate permettant d'abaisser la paroi postérieure du vagin pour exposer le col utérin et la paroi antérieure.",
+    descriptif:"Lame large et plate légèrement recourbée avec manche. Différentes largeurs. Longueur totale ~25 cm. Acier inoxydable.",
+    verification:"Vérifier la planéité et la largeur de la lame. Contrôler la rigidité du manche (ne doit pas fléchir). Surface lisse sans aspérités pouvant traumatiser les muqueuses.",
+    anecdote:"Eugène-Louis Doyen, chirurgien français prolifique, a développé une gamme complète d'instruments gynécologiques. Sa valve vaginale reste un outil indispensable dans les blocs de gynécologie pour l'exposition du champ opératoire vaginal." },
+
+  { id:66, fam:3, sousCat:"Valves", nom:"Valve vaginale JAYLE",
+    fonction:"Valve vaginale à lame recourbée permettant d'exposer la paroi antérieure du vagin et le bas-fond vésical lors des colporrhaphies antérieures.",
+    descriptif:"Lame recourbée vers le haut avec bords latéraux relevés pour maintenir les tissus. Manche ergonomique. Longueur totale ~22 cm.",
+    verification:"Vérifier la courbure régulière de la lame. Contrôler les bords latéraux (doivent canaliser sans traumatiser). Surface lisse. Rigidité du manche.",
+    anecdote:"Félix Jayle (1863–1935), gynécologue obstétricien français, a développé de nombreux instruments adaptés à la chirurgie vaginale de réparation. La valve Jayle est particulièrement utilisée pour les cystocèles et les prolapsus génitaux." },
+
+  { id:67, fam:3, sousCat:"Valves", nom:"Valve vaginale MANGIAGALLI",
+    fonction:"Valve vaginale à lame large permettant l'exposition du fond vaginal lors des interventions gynécologiques complexes.",
+    descriptif:"Lame large avec léger relief latéral. Manche solide. Longueur totale ~25 cm. Complémentaire des valves Doyen et Jayle dans l'exposition vaginale complète.",
+    verification:"Vérifier la largeur et la rigidité de la lame. Contrôler l'absence d'aspérités sur les bords. Tester la solidité du manche.",
+    anecdote:"Luigi Mangiagalli (1849–1928), gynécologue et homme politique italien, était directeur de la maternité de Milan. Ses instruments et techniques ont été adoptés dans les hôpitaux français, témoignant des échanges médicaux italo-français au début du XXe siècle." },
+
+  // ── CROCHETS (nouvelle famille 7 ou 6) ────────────────────────────────────
+  { id:68, fam:6, sousCat:"Crochets", nom:"Crochet de GILLIES",
+    fonction:"Crochet à une dent permettant de soulever les lambeaux cutanés et les structures superficielles en chirurgie plastique et maxillo-faciale.",
+    descriptif:"Fine tige métallique terminée par un crochet recourbé à pointe fine. Longueur ~14 cm. Acier inoxydable. Très léger. Permet une traction douce sur la peau.",
+    verification:"Vérifier la pointe du crochet (fine et non émoussée). Contrôler la rectitude de la tige. Absence de corrosion. Protéger la pointe lors du conditionnement.",
+    anecdote:"Sir Harold Gillies, père de la chirurgie plastique moderne, utilisait ce crochet pour soulever délicatement les lambeaux de peau qu'il reconstituait sur les soldats défigurés de la Première Guerre mondiale. Simple mais indispensable." },
+
+  { id:69, fam:6, sousCat:"Crochets", nom:"Crochet peau de JOSEPH",
+    fonction:"Double crochet cutané permettant d'exercer une traction symétrique sur les berges de plaie ou les lambeaux cutanés lors des plastiques et rhinoplasties.",
+    descriptif:"Instrument à double crochet (2 dents) avec manche central. Longueur ~14 cm. Acier inoxydable. Permet une traction équilibrée sur les deux berges simultanément.",
+    verification:"Vérifier les deux pointes (symétriques, fines, non émoussées). Contrôler la rectitude des deux crochets. Protéger les pointes au conditionnement.",
+    anecdote:"Jacques Joseph (1865–1934), chirurgien allemand d'origine polonaise, est le père de la rhinoplastie moderne. Il a réalisé la première rhinoplastie esthétique documentée en 1898 à Berlin. Ses instruments sont des références en chirurgie plastique." },
+
+  // ── CLAMPS manquants ───────────────────────────────────────────────────────
+  { id:70, fam:2, sousCat:"Clamps", nom:"Clamp bulldog DEBAKEY",
+    fonction:"Petit clamp atraumatique à ressort permettant de pincer temporairement de petits vaisseaux sans les léser lors des anastomoses vasculaires.",
+    descriptif:"Petite pince à ressort de rappel, mors atraumatiques striés finement. Longueur 4–6 cm. S'applique perpendiculairement au vaisseau. Différentes tailles.",
+    verification:"Vérifier l'élasticité du ressort (pression suffisante pour occlure sans déchirer). Contrôler les mors atraumatiques (pas d'aspérités). Tester l'ouverture et la fermeture.",
+    anecdote:"Michael DeBakey a conçu ce petit clamp pour la microchirurgie vasculaire. Surnommé 'bulldog' en raison de sa petite taille et de sa prise ferme, il est indispensable pour les pontages coronariens et les anastomoses vasculaires de petit calibre." },
+
+  { id:71, fam:2, sousCat:"Clamps", nom:"Clamp ombilical de BAR",
+    fonction:"Clamp permettant de serrer et de sectionner le cordon ombilical lors de l'accouchement de manière sécurisée.",
+    descriptif:"Pince à crémaillère avec mors larges et striés permettant une occlusion complète du cordon ombilical. Disponible en version réutilisable (acier) ou usage unique (plastique).",
+    verification:"Vérifier la fermeture complète des mors. Tester chaque cran de crémaillère (ne doit pas sauter). Contrôler l'absence de défaut sur les stries.",
+    anecdote:"Le Dr Gaston Bar (1853–1922), obstétricien français, a développé cet instrument pour standardiser la section du cordon ombilical. Avant sa généralisation, les techniques variaient considérablement d'un praticien à l'autre, avec des risques d'hémorragie ou d'infection néonatale." },
+
+  // ── PINCES CÉLIO manquantes ────────────────────────────────────────────────
+  { id:72, fam:5, sousCat:"Pinces de cœlioscopie", nom:"Pince célio dissecteur crochet",
+    fonction:"Instrument de cœlioscopie combinant une pince de dissection et un crochet électrique pour la dissection et la coagulation monopolaire des tissus.",
+    descriptif:"Pince longue (33 cm) avec crochet distal monopolaire. Passée dans un trocart 5 mm. Connexion électrique pour la coagulation par effraction ou section. Manche rotatif.",
+    verification:"Vérifier l'isolation électrique complète du corps de la pince. Contrôler l'état du crochet (dépôts carbonisés à nettoyer). Tester la rotation du manche. Vérifier le connecteur électrique.",
+    anecdote:"Le crochet électrique de cœlioscopie est l'instrument emblématique de la cholécystectomie laparoscopique, première opération cœlioscopique courante (1987). Il a révolutionné la chirurgie abdominale en permettant des interventions sans grande incision." },
+
+  { id:73, fam:5, sousCat:"Pinces de cœlioscopie", nom:"Pince célio monopolaire de préhension",
+    fonction:"Pince de préhension cœlioscopique à mors atraumatiques permettant de saisir, mobiliser et coaguler les tissus lors des interventions laparoscopiques.",
+    descriptif:"Pince longue (33 cm), mors à plateau strié ou fenêtré. Connexion monopolaire optionnelle. Passée dans un trocart 5 mm. Manche avec système de blocage.",
+    verification:"Vérifier l'isolation électrique si connexion monopolaire. Contrôler les mors (absence de dépôts, fermeture correcte). Tester le système de blocage du manche.",
+    anecdote:"La pince de préhension cœlioscopique est l'instrument le plus utilisé en cœlioscopie après l'optique. Elle permet au chirurgien de mobiliser les organes depuis l'extérieur, reproduisant le geste de préhension digitale sans ouvrir l'abdomen." },
+
+  { id:74, fam:5, sousCat:"Pinces de cœlioscopie", nom:"Pince célio porte-aiguille",
+    fonction:"Porte-aiguille cœlioscopique permettant de réaliser des sutures intracorporelles lors des interventions laparoscopiques avancées.",
+    descriptif:"Pince longue (33 cm) avec mors en carbure de tungstène pour maintenir l'aiguille. Passée dans un trocart 5–10 mm. Manche ergonomique avec crémaillère.",
+    verification:"Vérifier les mors en carbure (pas d'ébréchures). Tester le maintien d'une aiguille chirurgicale (ne doit pas tourner). Contrôler la crémaillère. Tester la rotation du manche.",
+    anecdote:"La suture intracorporelle en cœlioscopie est l'une des compétences les plus difficiles à acquérir en chirurgie. Le porte-aiguille cœlioscopique a permis le développement de la chirurgie laparoscopique avancée comme la fundoplicature de Nissen ou les anastomoses digestives." },
+
+  { id:75, fam:5, sousCat:"Pinces de cœlioscopie", nom:"Pince célio pousse-nœud",
+    fonction:"Instrument cœlioscopique permettant de pousser et serrer les nœuds chirurgicaux lors de la ligature extracorporelle des pédicules en laparoscopie.",
+    descriptif:"Fine tige creuse (33 cm) avec embout recourbé permettant de glisser le nœud le long du fil et de le serrer contre le tissu. Différents modèles (jetable ou réutilisable).",
+    verification:"Vérifier la perméabilité de la tige creuse (le fil doit glisser librement). Contrôler l'embout recourbé (pas de déformation). Absence de résidus dans la tige.",
+    anecdote:"Le pousse-nœud (ou 'knot pusher' en anglais) a été développé lors des premiers temps de la cœlioscopie opératoire pour pallier la difficulté des nœuds intracorporels. La technique extracorporelle avec pousse-nœud reste enseignée comme base de la ligature laparoscopique." },
+
+  // ── MATÉRIEL CŒLIOSCOPIE ──────────────────────────────────────────────────
+  { id:76, fam:5, sousCat:"Matériel de cœlioscopie", nom:"Optique de cœlioscopie",
+    fonction:"Système optique rigide connecté à une source lumineuse et une caméra permettant la visualisation de la cavité abdominale lors des interventions laparoscopiques.",
+    descriptif:"Tube rigide en verre et acier (diamètre 5 ou 10 mm), angle de vision 0° ou 30°. Connexion pour câble de lumière froide et caméra vidéo. Longueur ~30 cm.",
+    verification:"Vérifier la clarté de l'optique (pas de rayure ou de buée interne). Contrôler le raccord du câble de lumière. Tester avec la source lumineuse (transmission homogène). Conserver dans un étui rigide.",
+    anecdote:"L'optique cœlioscopique est l'œil du chirurgien lors des interventions laparoscopiques. Les premières optiques (années 1960) offraient une vision très limitée. Les optiques HD actuelles permettent une image 4K retransmise sur écran, révolutionnant la chirurgie mini-invasive." },
+
+  { id:77, fam:5, sousCat:"Matériel de cœlioscopie", nom:"Câble de lumière",
+    fonction:"Câble transmettant la lumière froide de la source lumineuse jusqu'à l'optique pour illuminer la cavité opératoire lors des interventions laparoscopiques.",
+    descriptif:"Faisceau de fibres optiques gainé. Différentes longueurs (1,5 à 3 m). Connecteurs adaptés à la source et à l'optique. Fragile aux pliures excessives.",
+    verification:"Vérifier l'absence de pliures ou cassures (les fibres optiques cassées réduisent la transmission lumineuse). Contrôler les connecteurs. Tester la transmission lumineuse (doit être homogène).",
+    anecdote:"Le câble de lumière est un dispositif délicat souvent endommagé par une mauvaise manipulation. Chaque fibre optique cassée réduit la luminosité transmise. Un câble enroulé trop serré peut perdre 50% de sa transmission lumineuse en quelques utilisations." },
+
+  { id:78, fam:5, sousCat:"Matériel de cœlioscopie", nom:"Câble monopolaire",
+    fonction:"Câble électrique reliant les instruments monopolaires au générateur électrochirurgical pour permettre la coagulation et la section des tissus en cœlioscopie.",
+    descriptif:"Câble isolé avec connecteur spécifique côté générateur et connecteur pour instrument côté chirurgical. Longueur ~3 m. Code couleur selon le fabricant.",
+    verification:"Vérifier l'intégrité de la gaine isolante (toute fissure = risque de brûlure ou électrocution). Contrôler les connecteurs. Tester la continuité électrique. Absence de torsade ou écrasement.",
+    anecdote:"Le câble monopolaire est un dispositif à risque électrique nécessitant une vigilance particulière. Les brûlures liées à des défauts d'isolation des câbles monopolaires sont une cause connue d'accidents en chirurgie laparoscopique, nécessitant une inspection rigoureuse avant chaque utilisation." },
+
+  // ── INSTRUMENTS SPÉCIFIQUES manquants ─────────────────────────────────────
+  { id:79, fam:6, sousCat:"Instruments spécifiques", nom:"Abaisse-langue",
+    fonction:"Instrument permettant d'abaisser la langue pour examiner la cavité buccale, le pharynx et les amygdales lors des examens ORL.",
+    descriptif:"Tige plate à extrémité arrondie et élargie. Métal réutilisable (acier inoxydable) ou bois/plastique à usage unique. Longueur ~16 cm.",
+    verification:"Version réutilisable : vérifier la surface lisse (pas de rayure ou aspérité). Absence de corrosion. Stérilisation complète impérative entre chaque usage (sinon usage unique recommandé).",
+    anecdote:"L'abaisse-langue est l'un des instruments médicaux les plus anciens et les plus simples. Sa forme n'a pratiquement pas changé depuis le XIXe siècle. Les versions jetables en bois ont largement supplanté les modèles métalliques dans les consultations pour des raisons d'hygiène." },
+
+  { id:80, fam:6, sousCat:"Instruments spécifiques", nom:"Aiguille à ligature DOYEN",
+    fonction:"Aiguille recourbée permettant de passer un fil de ligature autour d'un pédicule vasculaire ou tissulaire profond lors des interventions chirurgicales.",
+    descriptif:"Aiguille recourbée montée sur un manche, chas à l'extrémité recourbée. Différentes tailles et courbures. Longueur totale ~20–25 cm. Acier inoxydable.",
+    verification:"Vérifier la pointe (doit être fine et non émoussée). Contrôler le chas (ouvert, sans débris). Vérifier la régularité de la courbure. Absence de corrosion.",
+    anecdote:"Doyen a développé cette aiguille pour passer des fils autour des pédicules vasculaires lors des hystérectomies et des interventions abdominales. Elle reste indispensable en chirurgie ouverte quand l'espace est insuffisant pour les porte-aiguilles classiques." },
+
+  { id:81, fam:6, sousCat:"Instruments spécifiques", nom:"Aiguille de REVERDIN",
+    fonction:"Aiguille à œillet mobile permettant de passer un fil à travers les tissus lors des sutures profondes ou des ligatures, en particulier dans des espaces restreints.",
+    descriptif:"Aiguille droite ou courbée avec œillet mobile à l'extrémité (s'ouvre pour saisir le fil, se referme pour le tirer). Manche plat. Longueur ~15–20 cm.",
+    verification:"Vérifier le mécanisme de l'œillet mobile (doit s'ouvrir et se refermer librement). Contrôler la pointe (non émoussée). Absence de corrosion dans le mécanisme.",
+    anecdote:"Jacques-Louis Reverdin (1842–1929), chirurgien genevois, est surtout connu pour la première greffe de peau libre (1869). Son aiguille à œillet mobile est une autre contribution majeure : elle a facilité la suture dans les zones profondes sans qu'une main supplémentaire ne soit nécessaire." },
+
+  { id:82, fam:6, sousCat:"Instruments spécifiques", nom:"Anuscope de BENSAUDE",
+    fonction:"Instrument permettant d'explorer le canal anal et la partie basse du rectum lors de l'examen proctologique.",
+    descriptif:"Tube court avec obturateur, orifice d'observation latéral ou distal. Longueur ~8–10 cm. Acier inoxydable ou usage unique. Différents diamètres.",
+    verification:"Vérifier la planéité du bord distal (sans aspérités pouvant blesser la muqueuse). Contrôler l'obturateur (glisse librement). Absence de défaut sur la surface interne.",
+    anecdote:"Raoul Bensaude (1866–1938), gastro-entérologue parisien pionnier de l'endoscopie digestive, a contribué au développement des instruments de proctologie. Ses travaux ont posé les bases de l'exploration moderne du tube digestif." },
+
+  { id:83, fam:6, sousCat:"Instruments spécifiques", nom:"Anuscope de SIMS",
+    fonction:"Spéculum anal en forme de canard (bec de canard) permettant d'écarter les parois du canal anal pour l'examen et les gestes thérapeutiques proctologiques.",
+    descriptif:"Deux valves en bec de canard articulées avec vis d'ouverture. Longueur ~10 cm. Acier inoxydable. Permet une ouverture progressive du canal anal.",
+    verification:"Vérifier le mécanisme d'ouverture (progressif et régulier). Contrôler les bords des valves (lisses). Tester le blocage en position ouverte. Absence de jeu excessif.",
+    anecdote:"James Marion Sims a développé de nombreux instruments gynécologiques et proctologiques. Son spéculum anal reste utilisé pour le traitement des hémorroïdes, des fistules et des fissures anales sous contrôle visuel direct." },
+
+  { id:84, fam:6, sousCat:"Instruments spécifiques", nom:"Curette dermatologique de BESNIER",
+    fonction:"Curette à bord tranchant permettant l'exérèse par raclage des lésions cutanées (molluscums, kératoses, tumeurs bénignes) en dermatologie.",
+    descriptif:"Tige fine terminée par une cuillère ovale à bords tranchants. Différentes tailles. Longueur ~14 cm. Acier inoxydable. Très légère.",
+    verification:"Vérifier le tranchant de la cuillère (doit couper nettement sans déchirer). Contrôler l'intégrité du bord (ébréchures = inefficacité). Inspecter la propreté de la cuillère.",
+    anecdote:"Ernest Besnier (1831–1909), dermatologue français de l'Hôpital Saint-Louis à Paris, a développé de nombreux instruments de dermatologie clinique. L'Hôpital Saint-Louis reste à ce jour l'un des plus grands centres de dermatologie au monde." },
+
+  { id:85, fam:6, sousCat:"Instruments spécifiques", nom:"Dissecteur BARRAYA",
+    fonction:"Dissecteur chirurgical à extrémité mousse permettant de décoller les plans anatomiques par dissection mousse lors des interventions abdominales et thoraciques.",
+    descriptif:"Tige fine avec extrémité mousse recourbée en olive ou spatule. Longueur ~20 cm. Acier inoxydable. Utilisé pour disséquer sans couper ni coaguler.",
+    verification:"Vérifier la douceur de l'extrémité mousse (pas d'aspérité). Contrôler la rigidité de la tige. Absence de corrosion. Surface lisse.",
+    anecdote:"La dissection mousse avec dissecteur est une technique fondamentale de la chirurgie moderne : elle permet de respecter les plans anatomiques naturels et de réduire les saignements et les lésions des structures nobles lors des interventions." },
+
+  { id:86, fam:6, sousCat:"Instruments spécifiques", nom:"Dissecteur OSHAUGNESSY",
+    fonction:"Dissecteur recourbé permettant de passer et d'isoler le pédicule hépatique ou d'autres structures vasculaires lors des dissections chirurgicales profondes.",
+    descriptif:"Tige fine avec extrémité distale recourbée à 90° et extrémité mousse. Longueur ~25 cm. Acier inoxydable. Conçu pour contourner les structures vasculaires.",
+    verification:"Vérifier la régularité de la courbure distale. Contrôler la finesse et la douceur de l'extrémité. Absence de corrosion. Rigidité de la tige.",
+    anecdote:"O'Shaugnessy est le chirurgien irlandais qui a développé ce dissecteur pour la chirurgie hépatique. Il est particulièrement utilisé lors des cholécystectomies ouvertes pour passer autour du canal cystique et de l'artère cystique lors de la ligature." },
+
+  { id:87, fam:6, sousCat:"Instruments spécifiques", nom:"Hystéromètre de VALLEIX",
+    fonction:"Sonde utérine graduée permettant de mesurer la longueur de la cavité utérine et de vérifier la perméabilité du col lors des gestes gynécologiques.",
+    descriptif:"Tige métallique souple et graduée (en cm) avec extrémité boutonnée. Longueur ~35 cm. Graduation de 0 à 10 cm. Acier inoxydable ou usage unique.",
+    verification:"Vérifier la graduation (lisible et complète). Contrôler l'extrémité boutonnée (présente, non déformée). Absence de corrosion sur la tige graduée. La souplesse doit être appropriée.",
+    anecdote:"François Louis Isidore Valleix (1807–1855), médecin français, est surtout connu pour les points de Valleix (zones douloureuses du névralgie). Son hystéromètre reste indispensable en gynécologie pour l'évaluation préopératoire avant la pose d'un DIU ou une hystéroscopie." },
+
+  { id:88, fam:6, sousCat:"Instruments spécifiques", nom:"Passe-fils pour viseur SMILLIE TRILLAT",
+    fonction:"Instrument permettant de passer les fils de suture à travers les tunnels osseux lors des reconstructions ligamentaires du genou (ligament croisé).",
+    descriptif:"Tige rigide avec extrémité recourbée pour guider le fil à travers les tunnels. Utilisé conjointement avec le viseur de Trillat. Acier inoxydable. Longueur variable.",
+    verification:"Vérifier la rectitude et la rigidité de la tige. Contrôler l'extrémité recourbée (non déformée). Absence de corrosion. Compatibilité avec le système de viseur utilisé.",
+    anecdote:"Jacques Trillat (chirurgien lyonnais) et le Pr Smillie ont développé des techniques de reconstruction du ligament croisé antérieur. La technique de Trillat-Elmslie reste une référence historique dans la chirurgie du genou. Aujourd'hui supplantée par les techniques arthroscopiques." },
+
+  { id:89, fam:6, sousCat:"Instruments spécifiques", nom:"Perce-membrane",
+    fonction:"Instrument permettant de percer artificiellement les membranes fœtales (amniotomie) lors du déclenchement artificiel du travail en obstétrique.",
+    descriptif:"Petit crochet ou lancette à extrémité pointue monté sur une tige fine. Longueur ~30 cm. Plastique ou acier. Permet de rompre la poche des eaux sans risque pour le fœtus.",
+    verification:"Vérifier la pointe (doit être tranchante et non émoussée). Contrôler l'isolation de la tige si contact avec les mains. Pour les modèles réutilisables : absence de résidus biologiques.",
+    anecdote:"L'amniotomie artificielle est pratiquée depuis l'Antiquité pour accélérer le travail. Les instruments modernes de type perce-membrane ont remplacé les anciens crochets au XIXe siècle. L'amniotomie est l'un des actes obstétricaux les plus fréquents dans les maternités." },
+
+  { id:90, fam:6, sousCat:"Instruments spécifiques", nom:"Pince à biopsie gynécologique DOUAY",
+    fonction:"Pince à mors tranchants permettant de prélever des fragments de muqueuse cervicale ou vaginale pour analyse histologique (biopsie).",
+    descriptif:"Pince à longues branches avec mors tranchants en cuillère à la pointe. Longueur ~24–28 cm. Crémaillère. Acier inoxydable. Différentes tailles de mors.",
+    verification:"Vérifier le tranchant des mors (doivent prélever nettement sans écraser le fragment). Contrôler l'alignement des mors en fermeture. Tester la crémaillère. Absence d'ébréchures.",
+    anecdote:"La biopsie cervicale par pince de Douay est un geste gynécologique courant pour le diagnostic des dysplasies cervicales (lésions précancéreuses) détectées lors de la colposcopie. Elle fait partie intégrante du dépistage du cancer du col de l'utérus." },
+
+  { id:91, fam:6, sousCat:"Instruments spécifiques", nom:"Stylet souple fistule",
+    fonction:"Sonde souple flexible permettant d'explorer le trajet d'une fistule, d'un sinus ou d'un abcès pour en évaluer la profondeur et la direction.",
+    descriptif:"Tige souple en métal ou plastique, extrémité boutonnée ou olivaire. Différentes longueurs (10–25 cm). Permet de suivre les trajets tortueux sans perforation.",
+    verification:"Vérifier la souplesse (doit suivre les courbes sans se casser). Contrôler l'extrémité boutonnée (présente et intacte). Absence de résidus biologiques. Stérilisation complète.",
+    anecdote:"L'exploration des fistules par sonde est une technique chirurgicale ancienne, décrite dès l'Antiquité par Hippocrate. Le stylet souple permet d'identifier le trajet complet d'une fistule anale ou cutanée avant son traitement chirurgical définitif." },
+
+];
+
+// ═══════════════════════════════════════════════
+//  URLS DES PHOTOS — MODIFIEZ ICI FACILEMENT
+//  Format : idInstrument: "https://url-de-la-photo.jpg"
+//  Exemple : 1: "https://upload.wikimedia.org/wikipedia/commons/scalpel.jpg"
+// ═══════════════════════════════════════════════
+const PHOTO_URLS = {
+  // ── TRANCHANTS ────────────────────────────────
+  1:  "https://d2p3duacfnfxvs.cloudfront.net/dontalia-fr/products/80206.jpg",
+  // 2:  "URL de la photo des Ciseaux MAYO",
+  // 3:  "URL de la photo des Ciseaux METZENBAUM",
+  // 4:  "URL de la photo des Ciseaux IRIS",
+  // 5:  "URL de la photo des Ciseaux DAUPHIN",
+  // 6:  "URL de la photo des Ciseaux DELESTRE",
+  // 7:  "URL de la photo des Ciseaux STEVENS",
+  // 8:  "URL de la photo des Ciseaux coupe-fil SPENCER",
+  // 9:  "URL de la photo de l'Ostéotome",
+  // 10: "URL de la photo de la Pince coupante/Gouge",
+
+  // ── PRÉHENSION ────────────────────────────────
+  // 11: "URL de la photo de la Pince HALSTEAD",
+  // 12: "URL de la photo de la Pince KOCHER",
+  // 13: "URL de la photo de la Pince KELLY",
+  // 14: "URL de la photo de la Pince ROCHESTER-PEAN",
+  // 15: "URL de la photo de la Pince LERICHE",
+  // 16: "URL de la photo du Clamp intestinal DOYEN",
+  // 17: "URL de la photo du Clamp SATINSKY",
+  // 36: "URL de la photo de la Pince DUVAL",
+  // 37: "URL de la photo de la Pince BENGOLEA",
+  // 38: "URL de la photo de la Pince CHAPUT",
+  // 39: "URL de la photo de la Pince CHAPUT MAYO",
+  // 40: "URL de la photo de la Pince CHRISTOPHE",
+  // 41: "URL de la photo de la Pince COLLIN",
+  // 42: "URL de la photo de la Pince CRILE-ROCHESTER",
+  // 43: "URL de la photo de la Pince JEAN-LOUIS FAURE",
+  // 44: "URL de la photo de la Pince TERRIER",
+  // 51: "URL de la photo de la Pince ALLIS",
+  // 52: "URL de la photo de la Pince champ BACKHAUS",
+  // 53: "URL de la photo de la Pince champ DOYEN",
+  // 54: "URL de la photo de la Pince CHERON",
+  // 55: "URL de la photo de la Pince en CŒUR",
+  // 56: "URL de la photo de la Pince LONGUETTE",
+  // 57: "URL de la photo de la Pince OMBREDANNE",
+  // 58: "URL de la photo de la Pince pansements GREGOIRE",
+  // 59: "URL de la photo de la Pince PAN MURPHY",
+  // 60: "URL de la photo de la Pince utérine MUSEUX",
+  // 61: "URL de la photo de la Pince utérine POZZI",
+  // 70: "URL de la photo du Clamp bulldog DEBAKEY",
+  // 71: "URL de la photo du Clamp ombilical BAR",
+
+  // ── ÉCARTEURS ─────────────────────────────────
+  // 18: "URL de la photo de l'Écarteur BECKMANN",
+  // 19: "URL de la photo de l'Écarteur DESMARRES",
+  // 20: "URL de la photo de l'Écarteur FARABEUF",
+  // 21: "URL de la photo de l'Écarteur FARABEUF-CORTI",
+  // 22: "URL de la photo de l'Écarteur GILLIES",
+  // 23: "URL de la photo de l'Écarteur HARTMANN",
+  // 24: "URL de la photo de l'Écarteur LANGENBECK",
+  // 25: "URL de la photo de l'Écarteur SENN MILLER",
+  // 26: "URL de la photo de l'Écarteur VOLKMANN",
+  // 27: "URL de la photo de l'Écarteur GOSSET",
+  // 28: "URL de la photo de l'Écarteur WEITLANER",
+  // 29: "URL de la photo de l'Écarteur ouvre-bouche DOYEN",
+  // 62: "URL de la photo du Spéculum COLLIN",
+  // 63: "URL de la photo du Spéculum CUSCO",
+  // 64: "URL de la photo de la Valve sus-pubienne ROCHARD",
+  // 65: "URL de la photo de la Valve vaginale DOYEN",
+  // 66: "URL de la photo de la Valve vaginale JAYLE",
+  // 67: "URL de la photo de la Valve vaginale MANGIAGALLI",
+
+  // ── SUTURE ────────────────────────────────────
+  // 101: "URL de la photo du Porte-aiguille MAYO-HEGAR",
+  // 102: "URL de la photo du Porte-aiguille HALSEY",
+  // 103: "URL de la photo de la Pince ADSON",
+  // 104: "URL de la photo de la Pince DE BAKEY",
+  // 45:  "URL de la photo de la Pince CLOVIS VINCENT",
+  // 46:  "URL de la photo de la Pince DE QUENU",
+  // 47:  "URL de la photo de la Pince FARKAS",
+  // 48:  "URL de la photo de la Pince GRAEFE",
+  // 49:  "URL de la photo de la Pince MICHEL",
+  // 50:  "URL de la photo du Porte-aiguille CRILE-WOOD",
+
+  // ── CREUX & CÉLIO ─────────────────────────────
+  // 30: "URL de la photo de la Canule d'aspiration",
+  // 31: "URL de la photo du Trocart",
+  // 72: "URL de la photo de la Pince célio crochet",
+  // 73: "URL de la photo de la Pince célio préhension",
+  // 74: "URL de la photo du Porte-aiguille célio",
+  // 75: "URL de la photo du Pousse-nœud",
+  // 76: "URL de la photo de l'Optique cœlioscopie",
+  // 77: "URL de la photo du Câble de lumière",
+  // 78: "URL de la photo du Câble monopolaire",
+
+  // ── AUTRES ────────────────────────────────────
+  // 32: "URL de la photo de la Pince JOHAN monopolaire",
+  // 33: "URL de la photo de la Curette SIMS",
+  // 34: "URL de la photo de la Sonde cannelée",
+  // 35: "URL de la photo de la Pince bipolaire",
+  // 68: "URL de la photo du Crochet GILLIES",
+  // 69: "URL de la photo du Crochet peau JOSEPH",
+  // 79: "URL de la photo de l'Abaisse-langue",
+  // 80: "URL de la photo de l'Aiguille à ligature DOYEN",
+  // 81: "URL de la photo de l'Aiguille REVERDIN",
+  // 82: "URL de la photo de l'Anuscope BENSAUDE",
+  // 83: "URL de la photo de l'Anuscope SIMS",
+  // 84: "URL de la photo de la Curette BESNIER",
+  // 85: "URL de la photo du Dissecteur BARRAYA",
+  // 86: "URL de la photo du Dissecteur OSHAUGNESSY",
+  // 87: "URL de la photo de l'Hystéromètre VALLEIX",
+  // 88: "URL de la photo du Passe-fils SMILLIE TRILLAT",
+  // 89: "URL de la photo du Perce-membrane",
+  // 90: "URL de la photo de la Pince à biopsie DOUAY",
+  // 91: "URL de la photo du Stylet souple fistule",
+};
+
+// ── Lecture de la photo (URL directe) ──────────
+function getPhoto(instrId) {
+  return PHOTO_URLS[instrId] || null;
+}
+
+// ── Sauvegarde URL via le petit formulaire in-card ──
+function savePhotoUrl(instrId, url) {
+  const trimmed = url.trim();
+  if (!trimmed) return;
+  PHOTO_URLS[instrId] = trimmed;
+  refreshPhotoDisplays(instrId);
+  // Synchronise aussi quiz/speed si ouverts
+  document.querySelectorAll(`.quiz-photo-zone, #speedPhotoZone`).forEach(z => {
+    if (z.dataset.instrId == instrId) renderQuizPhoto(z, instrId);
+  });
+}
+
+let currentPhotoTarget = null;
+
+function refreshPhotoDisplays(instrId) {
+  document.querySelectorAll(`.photo-zone[data-id="${instrId}"]`).forEach(zone => {
+    renderPhotoZone(zone, instrId);
+  });
+}
+
+function renderPhotoZone(zone, instrId) {
+  const url = getPhoto(instrId);
+  if (url) {
+    zone.innerHTML = `
+      <img src="${url}" alt="instrument" onerror="this.parentElement.dataset.broken='1';this.style.display='none'">
+      <button class="add-photo-btn" onclick="openUrlEditor(${instrId},event)">✏️ Changer l'URL</button>`;
+  } else {
+    zone.innerHTML = `
+      <div class="photo-placeholder">📷</div>
+      <div class="photo-hint">Collez une URL d'image</div>
+      <button class="add-photo-btn" onclick="openUrlEditor(${instrId},event)">+ Ajouter URL</button>`;
+  }
+}
+
+function openUrlEditor(instrId, evt) {
+  if (evt) evt.stopPropagation();
+  currentPhotoTarget = instrId;
+  const instr = INSTRUMENTS.find(i => i.id === instrId);
+  const current = getPhoto(instrId) || '';
+  document.getElementById('urlEditorTitle').textContent = instr ? instr.nom : 'Instrument';
+  document.getElementById('urlInput').value = current;
+  document.getElementById('urlPreview').src = '';
+  document.getElementById('urlPreviewWrap').style.display = 'none';
+  document.getElementById('urlModal').classList.add('open');
+  setTimeout(() => document.getElementById('urlInput').focus(), 100);
+}
+
+function previewUrl() {
+  const url = document.getElementById('urlInput').value.trim();
+  const wrap = document.getElementById('urlPreviewWrap');
+  const img  = document.getElementById('urlPreview');
+  if (!url) { wrap.style.display = 'none'; return; }
+  img.src = url;
+  img.onload  = () => { wrap.style.display = 'block'; };
+  img.onerror = () => { wrap.style.display = 'none'; };
+}
+
+function confirmUrl() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (url) savePhotoUrl(currentPhotoTarget, url);
+  closeUrlModal();
+}
+
+function closeUrlModal() {
+  document.getElementById('urlModal').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.querySelector('.btn-' + name === '.btn-catalogue' ? '.btn-catalogue'
+    : name === 'flashcards' ? '.btn-flashcard'
+    : name === 'quiz' ? '.btn-quiz'
+    : name === 'memory' ? '.btn-memory'
+    : '.btn-speed').classList.add('active');
+
+  if (name === 'flashcards') initFlashcards();
+  if (name === 'quiz') startQuiz();
+  if (name === 'memory') initMemory();
+  if (name === 'speed') resetSpeed();
+}
+
+// ═══════════════════════════════════════════════
+//  CATALOGUE
+// ═══════════════════════════════════════════════
+const famColors = ['','fam-1','fam-2','fam-3','fam-4','fam-5','fam-6'];
+const famNames  = ['','Instruments Tranchants','Instruments de Préhension','Écarteurs','Instruments de Suture','Instruments Creux & Célio','Autres Instruments'];
+
+let currentFam = 'all';
+
+function buildCards(instruments) {
+  const grid = document.getElementById('cardsGrid');
+  grid.innerHTML = '';
+  document.getElementById('countBadge').textContent = instruments.length;
+  instruments.forEach(instr => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-header ${famColors[instr.fam]}">
+        <div class="card-fam-label">Famille ${instr.fam} — ${instr.sousCat}</div>
+        <div class="card-name">${instr.nom}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-photo-zone photo-zone" data-id="${instr.id}" onclick="openUrlEditor(${instr.id},event)"></div>
+        <div class="card-fonction">${instr.fonction}</div>
+        <div class="card-tags">
+          <span class="tag tag-verif">✅ Vérif</span>
+          ${instr.anecdote ? '<span class="tag tag-anecdote">💡 Anecdote</span>' : ''}
+        </div>
+      </div>
+      <button class="card-expand-btn" onclick="toggleDetails(this)">▼ Voir les détails</button>
+      <div class="card-details">
+        <div class="detail-row detail-descriptif">
+          <div class="detail-label">📋 Descriptif technique</div>
+          <div>${instr.descriptif}</div>
+        </div>
+        <div class="detail-row detail-verif">
+          <div class="detail-label">✅ Vérification recomposition</div>
+          <div>${instr.verification}</div>
+        </div>
+        ${instr.anecdote ? `<div class="detail-row detail-anecdote"><div class="detail-label">💡 Le saviez-vous ?</div><div>${instr.anecdote}</div></div>` : ''}
+      </div>`;
+    // init photo zone
+    const zone = card.querySelector('.photo-zone');
+    renderPhotoZone(zone, instr.id);
+    grid.appendChild(card);
+  });
+}
+
+function toggleDetails(btn) {
+  const details = btn.nextElementSibling;
+  const open = details.classList.toggle('open');
+  btn.textContent = open ? '▲ Masquer les détails' : '▼ Voir les détails';
+}
+
+function filterFam(fam, btn) {
+  currentFam = fam;
+  document.querySelectorAll('.fam-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterCards();
+}
+
+function filterCards() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = INSTRUMENTS.filter(i => {
+    const matchFam = currentFam === 'all' || String(i.fam) === currentFam;
+    const matchQ = !q || i.nom.toLowerCase().includes(q) || i.fonction.toLowerCase().includes(q) || i.sousCat.toLowerCase().includes(q);
+    return matchFam && matchQ;
+  });
+  buildCards(filtered);
+}
+
+// ═══════════════════════════════════════════════
+//  FLASHCARDS
+// ═══════════════════════════════════════════════
+let fcList = [...INSTRUMENTS];
+let fcIndex = 0;
+let fcFamFilter = 'all';
+
+function initFlashcards() {
+  fcIndex = 0;
+  document.getElementById('fcScene').classList.remove('flipped');
+  showFC();
+}
+
+function setFCFam(fam, btn) {
+  fcFamFilter = fam;
+  document.querySelectorAll('[data-fcfam]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  fcList = fam === 'all' ? [...INSTRUMENTS] : INSTRUMENTS.filter(i => String(i.fam) === fam);
+  shuffleArray(fcList);
+  fcIndex = 0;
+  document.getElementById('fcScene').classList.remove('flipped');
+  showFC();
+}
+
+function showFC() {
+  if (!fcList.length) return;
+  const instr = fcList[fcIndex];
+  document.getElementById('fcName').textContent = instr.nom;
+  document.getElementById('fcFamille').textContent = `Famille ${instr.fam} — ${famNames[instr.fam]}`;
+  document.getElementById('fcBackName').textContent = instr.nom;
+  document.getElementById('fcFonction').textContent = instr.fonction;
+  document.getElementById('fcVerif').textContent = instr.verification;
+  document.getElementById('fcAnecdote').textContent = instr.anecdote || '—';
+  document.getElementById('fcAnecdoteRow').style.display = instr.anecdote ? 'block' : 'none';
+  const pct = Math.round(((fcIndex + 1) / fcList.length) * 100);
+  document.getElementById('fcProgress').style.width = pct + '%';
+  document.getElementById('fcProgressText').textContent = `${fcIndex + 1} / ${fcList.length}`;
+  document.getElementById('fcScene').classList.remove('flipped');
+}
+
+function flipCard() {
+  document.getElementById('fcScene').classList.toggle('flipped');
+}
+
+function fcNext() {
+  fcIndex = (fcIndex + 1) % fcList.length;
+  showFC();
+}
+
+function fcPrev() {
+  fcIndex = (fcIndex - 1 + fcList.length) % fcList.length;
+  showFC();
+}
+
+function shuffleFC() {
+  shuffleArray(fcList);
+  fcIndex = 0;
+  showFC();
+}
+
+// ═══════════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════════
+let quizType = 'fonction';
+let quizQuestions = [];
+let quizCurrent = 0;
+let quizScore = 0;
+const QUIZ_TOTAL = 10;
+
+function setQuizType(type, btn) {
+  quizType = type;
+  document.querySelectorAll('.qtype-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startQuiz();
+}
+
+function startQuiz() {
+  quizScore = 0;
+  quizCurrent = 0;
+  document.getElementById('quizScore').textContent = 0;
+  document.getElementById('quizResult').classList.remove('show');
+  document.getElementById('quizGame').style.display = 'block';
+  quizQuestions = shuffleArray([...INSTRUMENTS]).slice(0, QUIZ_TOTAL);
+  renderQuizQ();
+}
+
+function renderQuizQ() {
+  const instr = quizQuestions[quizCurrent];
+  document.getElementById('quizQNum').textContent = `${quizCurrent+1}/${QUIZ_TOTAL}`;
+  document.getElementById('quizQLabel').textContent = `Question ${quizCurrent+1}`;
+
+  let question = '';
+  let correctAnswer = '';
+  let optionsFn;
+
+  if (quizType === 'fonction') {
+    question = `Quel instrument a cette fonction ?\n"${instr.fonction}"`;
+    correctAnswer = instr.nom;
+    optionsFn = i => i.nom;
+  } else if (quizType === 'nom') {
+    question = `À quelle famille appartient "${instr.nom}" ?`;
+    correctAnswer = famNames[instr.fam];
+    optionsFn = i => famNames[i.fam];
+  } else if (quizType === 'famille') {
+    question = `"${instr.nom}" fait partie de quelle sous-catégorie ?`;
+    correctAnswer = instr.sousCat;
+    optionsFn = i => i.sousCat;
+  } else {
+    question = `Pour "${instr.nom}", quelle vérification est correcte ?`;
+    correctAnswer = instr.verification.substring(0, 80) + '…';
+    optionsFn = i => i.verification.substring(0, 80) + '…';
+  }
+
+  document.getElementById('quizQuestion').textContent = question;
+
+  // Photo
+  const pz = document.getElementById('quizPhotoZone');
+  if (getPhoto(instr.id)) {
+    pz.innerHTML = `<img src="${getPhoto(instr.id)}" alt="instrument">`;
+  } else {
+    pz.innerHTML = `<div style="font-size:2.5rem;opacity:0.3">📷</div><div style="font-size:0.8rem;color:#aaa">Ajoutez une photo dans le catalogue</div>`;
+  }
+
+  // Build distractors
+  const others = shuffleArray(INSTRUMENTS.filter(i => i.id !== instr.id)).slice(0, 3);
+  const answers = shuffleArray([
+    { text: correctAnswer, correct: true },
+    ...others.map(o => ({ text: optionsFn(o), correct: false }))
+  ]);
+
+  const optDiv = document.getElementById('quizOptions');
+  optDiv.innerHTML = '';
+  answers.forEach(ans => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = ans.text;
+    btn.onclick = () => answerQuiz(btn, ans.correct, instr);
+    optDiv.appendChild(btn);
+  });
+
+  document.getElementById('quizFeedback').className = 'quiz-feedback';
+  document.getElementById('quizFeedback').innerHTML = '';
+  document.getElementById('quizNextBtn').style.display = 'none';
+}
+
+function answerQuiz(btn, correct, instr) {
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  const fb = document.getElementById('quizFeedback');
+  if (correct) {
+    btn.classList.add('correct');
+    quizScore++;
+    document.getElementById('quizScore').textContent = quizScore;
+    fb.className = 'quiz-feedback correct';
+    fb.innerHTML = `✅ <strong>Bravo !</strong> ${instr.anecdote ? '💡 ' + instr.anecdote.substring(0, 120) + '…' : 'Bonne réponse !'}`;
+    confetti();
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-option').forEach(b => {
+      if (b.textContent.startsWith(getCorrectText(instr)) || b.classList.contains('correct')) {}
+    });
+    fb.className = 'quiz-feedback wrong';
+    fb.innerHTML = `❌ <strong>Dommage !</strong> La bonne réponse était : <em>${getCorrectText(instr)}</em>`;
+    // highlight correct
+    document.querySelectorAll('.quiz-option').forEach(b => {
+      if (isCorrectOption(b.textContent, instr)) b.classList.add('correct');
+    });
+  }
+  document.getElementById('quizNextBtn').style.display = 'block';
+}
+
+function getCorrectText(instr) {
+  if (quizType === 'fonction') return instr.nom;
+  if (quizType === 'nom') return famNames[instr.fam];
+  if (quizType === 'famille') return instr.sousCat;
+  return instr.verification.substring(0, 80) + '…';
+}
+
+function isCorrectOption(text, instr) {
+  return text === getCorrectText(instr);
+}
+
+function nextQuizQuestion() {
+  quizCurrent++;
+  if (quizCurrent >= QUIZ_TOTAL) {
+    endQuiz();
+  } else {
+    renderQuizQ();
+  }
+}
+
+function endQuiz() {
+  document.getElementById('quizGame').style.display = 'none';
+  const res = document.getElementById('quizResult');
+  res.classList.add('show');
+  const pct = Math.round((quizScore / QUIZ_TOTAL) * 100);
+  document.getElementById('quizResultScore').textContent = `${quizScore}/${QUIZ_TOTAL}`;
+  document.getElementById('quizResultEmoji').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '💪';
+  document.getElementById('quizResultMsg').textContent = pct >= 80
+    ? 'Excellent ! Vous maîtrisez parfaitement les instruments !'
+    : pct >= 50 ? 'Bon résultat ! Continuez à réviser !'
+    : 'Courage ! Révisez les flashcards et recommencez !';
+  if (pct >= 80) confetti(50);
+}
+
+// ═══════════════════════════════════════════════
+//  MEMORY
+// ═══════════════════════════════════════════════
+let memCards = [];
+let memFlipped = [];
+let memMatched = 0;
+let memMoves = 0;
+let memTimerInterval = null;
+let memSeconds = 0;
+const MEM_PAIRS = 6;
+
+function initMemory() {
+  clearInterval(memTimerInterval);
+  memMatched = 0; memMoves = 0; memSeconds = 0;
+  document.getElementById('memPairs').textContent = '0';
+  document.getElementById('memMoves').textContent = '0';
+  document.getElementById('memTimer').textContent = '0:00';
+  document.getElementById('memoryResult').classList.remove('show');
+  document.getElementById('memoryGrid').style.display = 'grid';
+
+  const selected = shuffleArray([...INSTRUMENTS]).slice(0, MEM_PAIRS);
+  memCards = [];
+  selected.forEach((instr, i) => {
+    memCards.push({ id: i*2, pairId: i, type: 'name', text: instr.nom, instr });
+    memCards.push({ id: i*2+1, pairId: i, type: 'def', text: instr.fonction.substring(0, 70) + '…', instr });
+  });
+  shuffleArray(memCards);
+  memFlipped = [];
+
+  const grid = document.getElementById('memoryGrid');
+  grid.innerHTML = '';
+  memCards.forEach((c, idx) => {
+    const el = document.createElement('div');
+    el.className = `memory-card type-${c.type}`;
+    el.dataset.idx = idx;
+    el.innerHTML = `
+      <div class="memory-card-face memory-card-back-face">🔬</div>
+      <div class="memory-card-face memory-card-front-face">${c.text}</div>`;
+    el.addEventListener('click', () => flipMemCard(idx));
+    grid.appendChild(el);
+  });
+
+  memTimerInterval = setInterval(() => {
+    memSeconds++;
+    const m = Math.floor(memSeconds/60), s = memSeconds%60;
+    document.getElementById('memTimer').textContent = `${m}:${s<10?'0':''}${s}`;
+  }, 1000);
+}
+
+function flipMemCard(idx) {
+  if (memFlipped.length >= 2) return;
+  const cards = document.querySelectorAll('.memory-card');
+  const card = cards[idx];
+  if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  card.classList.add('flipped');
+  memFlipped.push(idx);
+  if (memFlipped.length === 2) checkMemMatch(cards);
+}
+
+function checkMemMatch(cards) {
+  memMoves++;
+  document.getElementById('memMoves').textContent = memMoves;
+  const [a, b] = memFlipped;
+  const ca = memCards[a], cb = memCards[b];
+  if (ca.pairId === cb.pairId && ca.type !== cb.type) {
+    cards[a].classList.add('matched');
+    cards[b].classList.add('matched');
+    memMatched++;
+    document.getElementById('memPairs').textContent = memMatched;
+    memFlipped = [];
+    if (memMatched === MEM_PAIRS) endMemory();
+  } else {
+    setTimeout(() => {
+      cards[a].classList.remove('flipped');
+      cards[b].classList.remove('flipped');
+      memFlipped = [];
+    }, 900);
+  }
+}
+
+function endMemory() {
+  clearInterval(memTimerInterval);
+  document.getElementById('memoryGrid').style.display = 'none';
+  const res = document.getElementById('memoryResult');
+  res.classList.add('show');
+  document.getElementById('memoryResultScore').textContent = `${MEM_PAIRS} paires !`;
+  const m = Math.floor(memSeconds/60), s = memSeconds%60;
+  document.getElementById('memoryResultMsg').textContent = `Terminé en ${memMoves} coups et ${m}:${s<10?'0':''}${s} !`;
+  confetti(40);
+}
+
+// ═══════════════════════════════════════════════
+//  SPEED GAME
+// ═══════════════════════════════════════════════
+let speedTimerInterval = null;
+let speedTimeLeft = 60;
+let speedScore2 = 0;
+let speedList = [];
+let speedIdx = 0;
+
+function resetSpeed() {
+  clearInterval(speedTimerInterval);
+  document.getElementById('speedStart').style.display = 'block';
+  document.getElementById('speedGame').classList.add('hidden');
+  document.getElementById('speedResult2').classList.remove('show');
+}
+
+function startSpeed() {
+  speedTimeLeft = 60;
+  speedScore2 = 0;
+  speedList = shuffleArray([...INSTRUMENTS]);
+  speedIdx = 0;
+  document.getElementById('speedStart').style.display = 'none';
+  document.getElementById('speedResult2').classList.remove('show');
+  document.getElementById('speedGame').classList.remove('hidden');
+  document.getElementById('speedScore').textContent = 0;
+  updateSpeedTimer();
+  showSpeedQ();
+  clearInterval(speedTimerInterval);
+  speedTimerInterval = setInterval(() => {
+    speedTimeLeft--;
+    updateSpeedTimer();
+    if (speedTimeLeft <= 0) endSpeed();
+  }, 1000);
+  document.getElementById('speedInput').focus();
+}
+
+function updateSpeedTimer() {
+  const el = document.getElementById('speedTimer');
+  el.textContent = speedTimeLeft;
+  el.className = 'speed-timer' + (speedTimeLeft <= 10 ? ' danger' : '');
+}
+
+function showSpeedQ() {
+  if (speedIdx >= speedList.length) {
+    speedList = shuffleArray([...INSTRUMENTS]);
+    speedIdx = 0;
+  }
+  const instr = speedList[speedIdx];
+  document.getElementById('speedQuestion').textContent = `Quelle est la fonction de : "${instr.nom}" ?`;
+  document.getElementById('speedInput').value = '';
+  document.getElementById('speedInput').className = 'speed-input';
+  document.getElementById('speedResult').className = 'speed-result-line';
+
+  // Photo
+  const pz = document.getElementById('speedPhotoZone');
+  if (getPhoto(instr.id)) {
+    pz.innerHTML = `<img src="${getPhoto(instr.id)}" alt="${instr.nom}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+  } else {
+    pz.innerHTML = `<div style="font-size:2.5rem;opacity:0.3">📷</div><div style="font-size:0.8rem;color:#aaa">${instr.nom}</div>`;
+  }
+
+  // Hints: first letters
+  const hints = document.getElementById('speedHints');
+  hints.innerHTML = '';
+  const words = instr.nom.split(' ');
+  words.forEach(w => {
+    const span = document.createElement('button');
+    span.className = 'speed-hint-btn';
+    span.textContent = `${w[0]}…`;
+    span.title = 'Indice';
+    span.onclick = () => { span.textContent = w; span.disabled = true; };
+    hints.appendChild(span);
+  });
+}
+
+function checkSpeed() {
+  const instr = speedList[speedIdx];
+  const answer = document.getElementById('speedInput').value.trim().toLowerCase();
+  const correct = instr.nom.toLowerCase();
+  const rl = document.getElementById('speedResult');
+
+  if (answer === correct || correct.includes(answer) && answer.length >= 4) {
+    document.getElementById('speedInput').className = 'speed-input correct';
+    rl.className = 'speed-result-line show ok';
+    rl.textContent = `✅ Correct ! "${instr.nom}"`;
+    speedScore2++;
+    document.getElementById('speedScore').textContent = speedScore2;
+    setTimeout(() => { speedIdx++; showSpeedQ(); }, 700);
+  } else {
+    document.getElementById('speedInput').className = 'speed-input wrong';
+    rl.className = 'speed-result-line show bad';
+    rl.textContent = `❌ La réponse était : "${instr.nom}"`;
+    setTimeout(() => { speedIdx++; showSpeedQ(); }, 1200);
+  }
+}
+
+document.getElementById('speedInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkSpeed();
+});
+
+function endSpeed() {
+  clearInterval(speedTimerInterval);
+  document.getElementById('speedGame').classList.add('hidden');
+  const res = document.getElementById('speedResult2');
+  res.classList.add('show');
+  document.getElementById('speedFinalScore').textContent = `${speedScore2} pts`;
+  document.getElementById('speedResultMsg').textContent = speedScore2 >= 15
+    ? '🏆 Incroyable ! Vous êtes un expert des instruments !'
+    : speedScore2 >= 8 ? '👍 Bon score ! Continuez à vous entraîner !'
+    : '💪 Révisez les flashcards et revenez !';
+  if (speedScore2 >= 8) confetti(30);
+}
+
+// ═══════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════
+function shuffleArray(arr) {
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function confetti(count = 20) {
+  const colors = ['#E74C3C','#E91E8C','#1A6B3A','#1B5E8A','#7B2FBE','#E67E22','#F4D03F','#4AAED9'];
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `left:${Math.random()*100}vw; background:${colors[Math.floor(Math.random()*colors.length)]}; animation-delay:${Math.random()*0.8}s; animation-duration:${1.5+Math.random()}s; transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+
+// closeModal kept for compatibility
+function closeModal() { closeUrlModal(); }
+
+// ─── INIT ───────────────────────────────────────
+buildCards(INSTRUMENTS);
+initFlashcards();
+</script>
+</body>
+</html>
